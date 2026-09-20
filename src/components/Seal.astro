@@ -1,0 +1,9 @@
+---
+interface Props {
+  char?: string;
+}
+
+const { char = '胡' } = Astro.props;
+---
+
+<span class="seal" aria-hidden="true">{char}</span>
