@@ -6,14 +6,31 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  keywords?: string;
 }
 
 const {
   title = '胡志刚 · Hu Zhigang',
-  description = '胡志刚的个人主页，写作在 hmilyld.com。',
+  description = '胡志刚（河南周口沈丘）的个人主页，写作在 hmilyld.com。',
+  keywords = '胡志刚, 河南胡志刚, 郑州胡志刚, 周口胡志刚, 沈丘胡志刚, Hu Zhigang',
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://huzhigang.com');
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: '胡志刚',
+  alternateName: 'Hu Zhigang',
+  url: canonical.href,
+  sameAs: ['https://hmilyld.com'],
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'CN',
+    addressRegion: '河南省',
+    addressLocality: '周口市沈丘县',
+  },
+};
 ---
 
 <!doctype html>
@@ -25,6 +42,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://huzhigang.c
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#faf8f3" />
 
@@ -33,6 +51,21 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://huzhigang.c
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="zh_CN" />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(person)} />
+
+    {/* 绘制前定好明暗，避免闪白。 */}
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem('theme');
+          const dark = stored
+            ? stored === 'dark'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.classList.toggle('dark', dark);
+        } catch {}
+      })();
+    </script>
   </head>
   <body>
     <slot />

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* 纸 · 墨 · 印 */
   --color-paper: #faf8f3;
@@ -52,15 +54,21 @@
     flex: none;
     align-items: center;
     justify-content: center;
-    width: 1em;
-    height: 1em;
+    width: 1.1em;
+    height: 1.1em;
     font-size: 0.3em;
     line-height: 1;
+    letter-spacing: normal;
     color: var(--color-paper);
     background-color: var(--color-seal);
-    border-radius: 0.12em;
-    padding-bottom: 0.05em;
+    border-radius: 0.13em;
     animation: seal-press 520ms cubic-bezier(0.2, 0.9, 0.25, 1) 520ms both;
+  }
+
+  /* Optical centring: 胡's ink is right-heavy, so it sits a touch left. */
+  .seal__char {
+    display: block;
+    transform: translate(0.02em, -0.007em);
   }
 
   .link {
@@ -86,6 +94,32 @@
 
   .reveal-later {
     animation-delay: 220ms;
+  }
+
+  /* 明暗 — a small square of ink, quiet in the empty top of the card. */
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.95rem;
+    line-height: 1;
+    color: var(--color-ink-soft);
+    background-color: transparent;
+    border: 1px solid var(--color-rule);
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: color 160ms ease, border-color 160ms ease;
+  }
+
+  .theme-toggle:hover {
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  .theme-toggle__dark {
+    display: none;
   }
 }
 
@@ -118,4 +152,23 @@
   .seal {
     animation: none;
   }
+}
+
+/* 墨底 — dark mode keeps the same materials, reversed. */
+.dark {
+  --color-paper: #171614;
+  --color-ink: #efece4;
+  --color-ink-soft: #9a958a;
+  --color-rule: #37342d;
+  --color-seal: #c0473a;
+  --color-seal-deep: #8e2c22;
+  color-scheme: dark;
+}
+
+.dark .theme-toggle__light {
+  display: none;
+}
+
+.dark .theme-toggle__dark {
+  display: inline;
 }

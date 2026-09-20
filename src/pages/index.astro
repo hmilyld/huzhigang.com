@@ -1,9 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
 import Seal from '../components/Seal.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 const name = '胡志刚';
 const pinyin = 'Hu Zhigang';
+const places = '河南 周口 沈丘';
 // TODO: replace with the real one-line self-description.
 const intro = '写点东西，也做点东西。';
 ---
@@ -12,6 +14,10 @@ const intro = '写点东西，也做点东西。';
   <main
     class="flex min-h-dvh flex-col justify-end px-[clamp(1.5rem,7vw,8rem)] pb-[clamp(1.75rem,5vh,3.5rem)] pt-24"
   >
+    <div class="fixed right-[clamp(1.5rem,7vw,8rem)] top-[clamp(1.5rem,5vh,2.75rem)] z-10">
+      <ThemeToggle />
+    </div>
+
     <div class="flex flex-col">
       <h1
         class="reveal flex items-end gap-[0.16em] text-name leading-[0.98] tracking-[0.04em]"
@@ -20,11 +26,10 @@ const intro = '写点东西，也做点东西。';
         <Seal />
       </h1>
 
-      <p
-        class="reveal reveal-late mt-[clamp(0.9rem,2vw,1.4rem)] font-newsreader text-pinyin tracking-[0.14em] text-ink-soft"
-      >
-        {pinyin}
-      </p>
+      <div class="reveal reveal-late mt-[clamp(0.9rem,2vw,1.4rem)] flex flex-col gap-[0.4rem]">
+        <p class="font-newsreader text-pinyin tracking-[0.14em] text-ink-soft">{pinyin}</p>
+        <p class="text-[0.95rem] tracking-[0.18em] text-ink-soft">{places}</p>
+      </div>
 
       <p class="reveal reveal-later mt-[clamp(1.75rem,4vw,2.75rem)] max-w-[26em] text-line leading-[1.9]">
         {intro}

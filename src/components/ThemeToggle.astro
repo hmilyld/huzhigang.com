@@ -1,0 +1,31 @@
+---
+// 明暗切换。初始主题由 Base 里的内联脚本在绘制前设定，避免闪烁。
+---
+
+<button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">
+  <span class="theme-toggle__light" aria-hidden="true">暗</span>
+  <span class="theme-toggle__dark" aria-hidden="true">明</span>
+</button>
+
+<script>
+  const root = document.documentElement;
+  const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+
+  function apply(dark: boolean) {
+    root.classList.toggle('dark', dark);
+    button?.setAttribute('aria-pressed', String(dark));
+    button?.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到深色模式');
+    themeColor?.setAttribute('content', dark ? '#171614' : '#faf8f3');
+  }
+
+  apply(root.classList.contains('dark'));
+
+  button?.addEventListener('click', () => {
+    const dark = !root.classList.contains('dark');
+    try {
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    } catch {}
+    apply(dark);
+  });
+</script>
