@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>风格二 · 图纸 · Blueprint — huzhigang.com 设计示意</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5/index.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/archivo@5/index.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ibm-plex-mono@5/index.css" />
+    <style>
+      :root {
+        --ground: #edf0f2;
+        --surface: #f6f8f9;
+        --ink: #16202b;
+        --muted: #5b6b7a;
+        --line: #c6d0d8;
+        --line-strong: #9fb0bd;
+        --ann: #1f4e79;
+        --mark: #b23a2e;
+        --grid: rgba(31, 78, 121, 0.07);
+        --pad: clamp(1.25rem, 5vw, 4rem);
+        --col: 820px;
+        --sans: "Noto Sans SC", "PingFang SC", system-ui, sans-serif;
+        --lat: "Archivo Variable", system-ui, sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      html[data-theme="dark"] {
+        --ground: #0e2233;
+        --surface: #102838;
+        --ink: #dce7f0;
+        --muted: #8fa6b8;
+        --line: #24384a;
+        --line-strong: #35506a;
+        --ann: #7fb3e0;
+        --mark: #e07a6a;
+        --grid: rgba(127, 179, 224, 0.08);
+      }
+      * { box-sizing: border-box; }
+      html { background: var(--ground); color-scheme: light; }
+      html[data-theme="dark"] { color-scheme: dark; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.7;
+        background-color: var(--ground);
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 24px 24px;
+        -webkit-font-smoothing: antialiased;
+        transition: background-color 200ms ease, color 200ms ease;
+      }
+      a { color: inherit; text-decoration: none; }
+      :focus-visible { outline: 2px solid var(--ann); outline-offset: 3px; }
+      .mono { font-family: var(--mono); }
+
+      .nav {
+        position: sticky; top: 0; z-index: 20;
+        display: flex; align-items: center; gap: 1.25rem;
+        padding: 0.9rem var(--pad);
+        background: color-mix(in srgb, var(--ground) 88%, transparent);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav .brand { font-family: var(--lat); font-weight: 600; letter-spacing: 0.02em; font-size: 0.92rem; }
+      .nav .sheetno { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; }
+      .nav .links { margin-left: auto; display: flex; align-items: center; gap: clamp(0.85rem, 2.4vw, 1.6rem); font-size: 0.85rem; color: var(--muted); }
+      .nav .links a:hover { color: var(--ink); }
+      .theme-toggle {
+        width: 2.1rem; height: 2.1rem; display: inline-flex; align-items: center; justify-content: center;
+        font-family: var(--sans); font-size: 0.85rem; line-height: 1; color: var(--muted);
+        background: transparent; border: 1px solid var(--line-strong); border-radius: 2px; cursor: pointer;
+        transition: color 150ms ease, border-color 150ms ease;
+      }
+      .theme-toggle:hover { color: var(--ink); border-color: var(--ink); }
+
+      .wrap { max-width: calc(var(--col) + 2 * var(--pad)); margin: 0 auto; padding: 0 var(--pad); }
+
+      /* ── sheet (cover) ─────────────────────────────── */
+      .sheet {
+        position: relative;
+        margin: clamp(1.5rem, 4vh, 3rem) auto clamp(2.5rem, 6vh, 4rem);
+        max-width: var(--col);
+        border: 1px solid var(--line-strong);
+        background: var(--surface);
+        padding: clamp(1.5rem, 4vw, 3rem);
+      }
+      .sheet::before, .sheet::after {
+        content: ""; position: absolute; width: 14px; height: 14px; pointer-events: none;
+        background:
+          linear-gradient(var(--line-strong), var(--line-strong)) center/100% 1px no-repeat,
+          linear-gradient(var(--line-strong), var(--line-strong)) center/1px 100% no-repeat;
+      }
+      .sheet::before { top: -7px; left: -7px; }
+      .sheet::after { bottom: -7px; right: -7px; }
+      .reg { position: absolute; width: 14px; height: 14px;
+        background:
+          linear-gradient(var(--line-strong), var(--line-strong)) center/100% 1px no-repeat,
+          linear-gradient(var(--line-strong), var(--line-strong)) center/1px 100% no-repeat; }
+      .reg.tr { top: -7px; right: -7px; }
+      .reg.bl { bottom: -7px; left: -7px; }
+
+      .dim { position: relative; height: 2.2rem; margin-bottom: 0.9rem; }
+      .dim .l { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line-strong); }
+      .dim .l::before, .dim .l::after { content: ""; position: absolute; top: -5px; width: 1px; height: 11px; background: var(--line-strong); }
+      .dim .l::before { left: 0; } .dim .l::after { right: 0; }
+      .dim .k { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: var(--surface); padding: 0 0.6rem; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; color: var(--ann); }
+      .dim .cap { position: absolute; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.08em; color: var(--muted); top: -0.1rem; }
+      .dim .cap.l { left: 0; } .dim .cap.r { right: 0; }
+
+      h1.name { margin: 0; font-family: var(--sans); font-weight: 700; font-size: clamp(2.75rem, 9vw, 5.5rem); line-height: 1; letter-spacing: -0.02em; }
+      h1.name .lat { display: block; font-family: var(--lat); font-weight: 600; font-size: clamp(0.95rem, 2vw, 1.3rem); letter-spacing: 0.16em; color: var(--muted); margin-top: 0.8rem; }
+      .position { margin: 1.5rem 0 0; font-size: clamp(1rem, 1.6vw, 1.15rem); max-width: 30em; }
+      .position em { font-style: normal; color: var(--ann); border-bottom: 1px solid var(--ann); padding-bottom: 1px; }
+
+      .titleblock { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line-strong); margin-top: clamp(2rem, 5vw, 3rem); }
+      .titleblock div { padding: 0.55rem 0.75rem; border-left: 1px solid var(--line); }
+      .titleblock div:first-child { border-left: 0; }
+      .titleblock dt { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em; color: var(--muted); margin: 0 0 0.15rem; text-transform: uppercase; }
+      .titleblock dd { margin: 0; font-size: 0.88rem; }
+
+      /* ── sections as drawing notes ─────────────────── */
+      .sect { max-width: var(--col); margin: 0 auto; padding: 0 var(--pad) clamp(3rem, 8vh, 5rem); }
+      .sect-head { display: flex; align-items: baseline; gap: 0.9rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--line-strong); margin-bottom: 1.2rem; }
+      .sect-head .no { font-family: var(--mono); font-size: 0.7rem; color: var(--ann); letter-spacing: 0.1em; }
+      .sect-head h2 { margin: 0; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.06em; }
+      .sect-head .en { font-family: var(--mono); font-size: 0.66rem; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; }
+      .sect-head .more { margin-left: auto; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; color: var(--ann); border-bottom: 1px solid var(--ann); padding-bottom: 1px; }
+
+      .note { margin: 0; max-width: 42em; color: var(--ink); }
+      .stamp { display: block; margin-top: 0.4rem; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; }
+
+      table.spec { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+      table.spec th { text-align: left; font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 500; padding: 0 0.8rem 0.5rem 0; border-bottom: 1px solid var(--line-strong); }
+      table.spec td { padding: 0.85rem 0.8rem 0.85rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+      table.spec td:last-child, table.spec th:last-child { padding-right: 0; }
+      table.spec .proj { font-family: var(--lat); font-weight: 600; font-size: 0.92rem; white-space: nowrap; }
+      table.spec .proj a { border-bottom: 1px solid transparent; }
+      table.spec .proj a:hover { border-color: var(--ink); }
+      table.spec .d { color: var(--muted); }
+      table.spec .tech, table.spec .st { font-family: var(--mono); font-size: 0.74rem; white-space: nowrap; }
+      table.spec .st { color: var(--muted); }
+      table.spec .st.active { color: var(--ann); }
+      table.spec .st.wip { color: var(--mark); }
+      table.spec tr:hover td { background: color-mix(in srgb, var(--ann) 5%, transparent); }
+
+      .notes-list { list-style: none; margin: 0; padding: 0; }
+      .notes-list li { display: grid; grid-template-columns: 5.5rem 1fr auto; gap: 1.25rem; padding: 0.8rem 0; border-bottom: 1px solid var(--line); font-size: 0.92rem; align-items: baseline; }
+      .notes-list .date { font-family: var(--mono); font-size: 0.76rem; color: var(--muted); }
+      .notes-list .t a { border-bottom: 1px solid transparent; }
+      .notes-list .t a:hover { border-color: var(--ink); }
+      .notes-list .src { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.06em; }
+
+      .tl { list-style: none; margin: 0; padding: 0; }
+      .tl li { display: grid; grid-template-columns: 11rem 1fr; gap: 1.5rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line); font-size: 0.92rem; }
+      .tl .yr { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+      .tl .org { color: var(--ink); }
+
+      .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; font-family: var(--mono); font-size: 0.82rem; }
+      .contact a { color: var(--ann); border-bottom: 1px solid transparent; padding-bottom: 1px; }
+      .contact a:hover { border-color: var(--ann); }
+
+      footer.foot { border-top: 1px solid var(--line-strong); margin: 0 var(--pad); padding: 1.5rem 0 3.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--muted); max-width: var(--col); }
+      footer.foot { margin-inline: auto; }
+
+      .badge { position: fixed; left: 0.9rem; bottom: 0.9rem; z-index: 30; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; color: var(--muted); background: color-mix(in srgb, var(--ground) 85%, transparent); border: 1px solid var(--line-strong); border-radius: 2px; padding: 0.2rem 0.6rem; backdrop-filter: blur(6px); }
+
+      @media (max-width: 700px) {
+        .titleblock { grid-template-columns: repeat(2, 1fr); }
+        .titleblock div:nth-child(3) { border-left: 0; }
+        .titleblock div { border-top: 1px solid var(--line); }
+        .titleblock div:nth-child(-n + 2) { border-top: 0; }
+        table.spec { display: block; overflow-x: auto; }
+        .notes-list li { grid-template-columns: 1fr; gap: 0.15rem; }
+        .tl li { grid-template-columns: 1fr; gap: 0.1rem; }
+      }
+      @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <span class="brand">HU ZHIGANG</span>
+      <span class="sheetno">SHEET 01 / 06</span>
+      <nav class="links">
+        <a href="#projects">项目</a>
+        <a href="#writing">写作</a>
+        <a href="#about">关于</a>
+        <a href="#contact">联系</a>
+        <button class="theme-toggle" type="button" aria-label="切换到深色模式">暗</button>
+      </nav>
+    </header>
+
+    <div class="wrap">
+      <section class="sheet">
+        <span class="reg tr" aria-hidden="true"></span>
+        <span class="reg bl" aria-hidden="true"></span>
+
+        <div class="dim" aria-hidden="true">
+          <span class="cap l">2008</span>
+          <span class="cap r">2026</span>
+          <span class="l"></span>
+          <span class="k">18 年</span>
+        </div>
+
+        <h1 class="name">胡志刚<span class="lat">HU ZHIGANG</span></h1>
+        <p class="position">全栈开发者。<em>做工具</em>，也写字。</p>
+
+        <dl class="titleblock">
+          <div><dt>姓名</dt><dd>胡志刚</dd></div>
+          <div><dt>坐标</dt><dd>河南</dd></div>
+          <div><dt>技术</dt><dd>Java · Python · Vue · TS</dd></div>
+          <div><dt>站点</dt><dd class="mono" style="font-size:0.78rem">huzhigang.com</dd></div>
+        </dl>
+      </section>
+    </div>
+
+    <section class="sect">
+      <div class="sect-head"><span class="no">01</span><h2>现在</h2><span class="en">Status</span></div>
+      <p class="note">正在构建 ArkDesk 与 PocketArk，把零散的工具整理成一套个人工具链。</p>
+      <span class="stamp">REV 2026-09</span>
+    </section>
+
+    <section class="sect" id="projects">
+      <div class="sect-head"><span class="no">02</span><h2>项目</h2><span class="en">Projects</span><a class="more" href="https://github.com/hmilyld">全部仓库 →</a></div>
+      <table class="spec">
+        <thead>
+          <tr><th>编号</th><th>项目</th><th>说明</th><th>技术</th><th>状态</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono" style="font-size:0.72rem;color:var(--muted)">P-01</td>
+            <td class="proj"><a href="https://fullstack.hmilyld.com">fullstack-starter</a></td>
+            <td class="d">常规前后端基础框架，支持 Vue / React × Java / Python 四种组合。</td>
+            <td class="tech">TypeScript</td>
+            <td class="st active">● 活跃</td>
+          </tr>
+          <tr>
+            <td class="mono" style="font-size:0.72rem;color:var(--muted)">P-02</td>
+            <td class="proj"><a href="https://zchat.cc">zerochat</a></td>
+            <td class="d">端到端加密、阅后即焚的通讯，加密全在浏览器端完成，服务器零信任。</td>
+            <td class="tech">TypeScript</td>
+            <td class="st active">● 活跃</td>
+          </tr>
+          <tr>
+            <td class="mono" style="font-size:0.72rem;color:var(--muted)">P-03</td>
+            <td class="proj"><a href="https://dotnet.hmilyld.com">ProjectEnc</a></td>
+            <td class="d">合并、加密、打包 C# 程序的工具集，三合一。</td>
+            <td class="tech">Inno Setup</td>
+            <td class="st">○ 维护</td>
+          </tr>
+          <tr>
+            <td class="mono" style="font-size:0.72rem;color:var(--muted)">P-04</td>
+            <td class="proj"><a href="https://pocketark.hmilyld.com">PocketArk</a></td>
+            <td class="d">基于 Tauri 的桌面端基础架构，含生命周期钩子与插件目录规范。</td>
+            <td class="tech">Vue</td>
+            <td class="st wip">◌ 开发中</td>
+          </tr>
+          <tr>
+            <td class="mono" style="font-size:0.72rem;color:var(--muted)">P-05</td>
+            <td class="proj"><a href="https://github.com/hmilyld/weekly-report">weekly-report</a></td>
+            <td class="d">日报自动生成周报。</td>
+            <td class="tech">JavaScript</td>
+            <td class="st">○ 维护</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="sect" id="writing">
+      <div class="sect-head"><span class="no">03</span><h2>写作</h2><span class="en">Writing</span><a class="more" href="https://hmilyld.com">hmilyld.com →</a></div>
+      <ul class="notes-list">
+        <li><span class="date">2026-09</span><span class="t"><a href="https://hmilyld.com/posts/blog-migration-typecho-to-astro">从 Typecho 迁移到 Astro 的记录</a></span><span class="src">原文</span></li>
+        <li><span class="date">2026-08</span><span class="t"><a href="https://hmilyld.com">用 AI 辅助生成软著材料</a></span><span class="src">原文</span></li>
+        <li><span class="date">2026-07</span><span class="t"><a href="https://hmilyld.com/posts/pocketark-desktop-app-framework">PocketArk：一个桌面应用基础框架</a></span><span class="src">原文</span></li>
+        <li><span class="date">2026-06</span><span class="t"><a href="https://hmilyld.com/posts/docker-tomcat-mysql-nginx">Debian + Docker 部署笔记</a></span><span class="src">原文</span></li>
+      </ul>
+    </section>
+
+    <section class="sect" id="about">
+      <div class="sect-head"><span class="no">04</span><h2>关于</h2><span class="en">Profile</span></div>
+      <ul class="tl">
+        <li><span class="yr">2008 — 2011</span><span class="org">河南电力试验研究院</span></li>
+        <li><span class="yr">2011 — 2014</span><span class="org">西安格蒂电力有限公司</span></li>
+        <li><span class="yr">2014 — 至今</span><span class="org">河南吉吉信息技术有限公司</span></li>
+      </ul>
+      <p class="note" style="margin-top:1.4rem;color:var(--muted)">这个域名是身份层：你是谁、做过什么、怎么联系。写东西在 hmilyld.com。</p>
+    </section>
+
+    <section class="sect" id="contact">
+      <div class="sect-head"><span class="no">05</span><h2>联系</h2><span class="en">Contact</span></div>
+      <div class="contact">
+        <a href="mailto:Hmilyld@gmail.com">Hmilyld@gmail.com</a>
+        <a href="https://github.com/hmilyld">github.com/hmilyld</a>
+        <a href="https://hmilyld.com">hmilyld.com</a>
+        <a href="https://hmilyld.com/rss.xml">RSS</a>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <span>BUILT WITH ASTRO · DEBIAN / DOCKER / NGINX</span>
+      <span>© 2026 HU ZHIGANG</span>
+    </footer>
+
+    <div class="badge">风格 2 / 4 · 图纸</div>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var saved = null;
+        try { saved = localStorage.getItem('demo-theme'); } catch (e) {}
+        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.setAttribute('data-theme', dark ? 'dark' : 'light');
+        function sync() {
+          var b = document.querySelector('.theme-toggle');
+          if (!b) return;
+          var d = root.getAttribute('data-theme') === 'dark';
+          b.textContent = d ? '明' : '暗';
+          b.setAttribute('aria-label', d ? '切换到浅色模式' : '切换到深色模式');
+        }
+        document.addEventListener('click', function (e) {
+          if (!e.target.closest('.theme-toggle')) return;
+          var d = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', d);
+          try { localStorage.setItem('demo-theme', d); } catch (err) {}
+          sync();
+        });
+        sync();
+      })();
+    </script>
+  </body>
+</html>

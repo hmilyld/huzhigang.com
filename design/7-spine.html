@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>版本 C · 主轴 Spine — huzhigang.com 设计示意</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/archivo@5/wdth.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cn-fontsource-source-han-sans-sc-vf/font.css" />
+    <style>
+      :root {
+        --ground: #edf0f2;
+        --surface: #f6f8f9;
+        --ink: #16202b;
+        --muted: #5b6b7a;
+        --faint: #8b9aa6;
+        --rule: #c6d0d8;
+        --rule-strong: #9fb0bd;
+        --ann: #1f4e79;
+        --mark: #b23a2e;
+        --axis-x: 6.5rem;
+        --pad: clamp(1.25rem, 6vw, 5.5rem);
+        --col: 880px;
+        --lat: "Archivo Variable", system-ui, sans-serif;
+        --han: "Source Han Sans SC VF", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+      }
+      html[data-theme="dark"] {
+        --ground: #0e2233;
+        --surface: #102838;
+        --ink: #dce7f0;
+        --muted: #8fa6b8;
+        --faint: #6c8296;
+        --rule: #24384a;
+        --rule-strong: #3d5a72;
+        --ann: #7fb3e0;
+        --mark: #e07a6a;
+      }
+      * { box-sizing: border-box; }
+      html { background: var(--ground); color-scheme: light; }
+      html[data-theme="dark"] { color-scheme: dark; }
+      body {
+        margin: 0; background: var(--ground); color: var(--ink);
+        font-family: var(--han); font-size: 15px; line-height: 1.7;
+        font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased;
+        transition: background-color 200ms ease, color 200ms ease;
+      }
+      a { color: inherit; text-decoration: none; }
+      :focus-visible { outline: 2px solid var(--ann); outline-offset: 3px; }
+      .lat { font-family: var(--lat); }
+      .wrap { max-width: calc(var(--col) + 2 * var(--pad)); margin: 0 auto; padding: 0 var(--pad); }
+
+      .topbar { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--rule); font-family: var(--lat); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+      .topbar .sp { margin-left: auto; }
+      .theme-toggle { font: inherit; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--rule-strong); padding: 0.05rem 0.5rem; border-radius: 2px; cursor: pointer; transition: color 150ms ease, border-color 150ms ease; }
+      .theme-toggle:hover { color: var(--ink); border-color: var(--ink); }
+
+      header.hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem 2.5rem; align-items: end; padding: clamp(1.75rem, 5vh, 3rem) 0 1.4rem; }
+      header.hero h1 { margin: 0; font-weight: 700; font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1; letter-spacing: 0.03em; }
+      header.hero .lat-name { font-family: var(--lat); font-weight: 600; letter-spacing: 0.28em; color: var(--ann); font-size: clamp(0.78rem, 1.4vw, 0.95rem); margin-top: 0.7rem; }
+      header.hero .tagline { margin: 0.8rem 0 0; color: var(--ink); max-width: 28em; }
+      header.hero .contact { text-align: right; font-family: var(--lat); font-size: 0.8rem; color: var(--muted); display: grid; gap: 0.15rem; }
+      header.hero .contact a:hover { color: var(--ann); }
+      header.hero .contact .zh { font-family: var(--han); }
+
+      .axis-head { display: flex; align-items: baseline; gap: 1rem; border-top: 2px solid var(--ink); padding: 0.7rem 0 0.4rem; font-family: var(--lat); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+      .axis-head .note { margin-left: auto; text-transform: none; letter-spacing: 0.04em; font-family: var(--han); font-size: 0.78rem; color: var(--faint); }
+
+      /* ── the spine ─────────────────────────────────── */
+      .spine { position: relative; list-style: none; margin: 0; padding: 0 0 clamp(2rem, 6vh, 4rem); }
+      .spine::before { content: ""; position: absolute; left: var(--axis-x); top: 0; bottom: 0; width: 1px; background: var(--rule-strong); }
+
+      .m { display: grid; grid-template-columns: var(--axis-x) minmax(0, 1fr); }
+      .m > .year { text-align: right; padding: 0.15rem 1.35rem 0 0; font-family: var(--lat); font-weight: 600; font-size: 0.86rem; color: var(--muted); letter-spacing: 0.03em; }
+      .m > .body { position: relative; padding: 0.15rem 0 2.1rem 1.4rem; }
+      .m > .body::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 0.62rem; height: 0.62rem; border-radius: 50%; background: var(--ground); border: 1.5px solid var(--ann); transform: translateX(-50%); }
+      .m.major > .body::before { background: var(--ann); }
+      .m.current > .body::before { background: var(--ann); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ann) 22%, transparent); }
+
+      .m h3 { margin: 0; font-size: 1.12rem; font-weight: 700; letter-spacing: 0.02em; line-height: 1.4; }
+      .m .range { font-family: var(--lat); font-size: 0.76rem; letter-spacing: 0.08em; color: var(--faint); margin-left: 0.75rem; white-space: nowrap; }
+      .m .desc { margin: 0.35rem 0 0; color: var(--muted); font-size: 0.92rem; max-width: 36em; }
+      .m .kind { font-family: var(--lat); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); }
+
+      .cluster { list-style: none; margin: 0.8rem 0 0; padding: 0; border-top: 1px solid var(--rule); }
+      .cluster li { display: grid; grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr) auto; gap: 0.15rem 1.2rem; align-items: baseline; padding: 0.6rem 0; border-bottom: 1px solid var(--rule); }
+      .cluster .name { font-family: var(--lat); font-weight: 600; font-size: 0.94rem; }
+      .cluster .name a { border-bottom: 1px solid transparent; }
+      .cluster .name a:hover { border-color: var(--ink); }
+      .cluster .d { margin: 0; color: var(--muted); font-size: 0.88rem; }
+      .cluster .st { font-family: var(--han); font-size: 0.8rem; color: var(--faint); white-space: nowrap; }
+      .cluster .st.active { color: var(--ann); }
+      .cluster .st.wip { color: var(--mark); }
+      .cluster .src { font-family: var(--lat); font-size: 0.72rem; color: var(--faint); }
+
+      /* axis break — compressed scale, a real drafting convention */
+      .brk { position: relative; height: 2.4rem; }
+      .brk svg { position: absolute; left: var(--axis-x); top: 50%; transform: translate(-50%, -50%); color: var(--rule-strong); }
+      .brk .cap { position: absolute; left: calc(var(--axis-x) + 1.2rem); top: 50%; transform: translateY(-50%); font-family: var(--lat); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+
+      .endcap { display: grid; grid-template-columns: var(--axis-x) minmax(0, 1fr); }
+      .endcap .label { text-align: right; padding-right: 1.35rem; font-family: var(--lat); font-weight: 600; font-size: 0.86rem; color: var(--ink); }
+      .endcap .body { padding-left: 1.4rem; position: relative; }
+      .endcap .body::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 0.62rem; height: 2px; background: var(--ann); transform: translateX(-50%); }
+
+      .footnote { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; padding: 1.1rem 0 3.5rem; border-top: 1px solid var(--rule-strong); font-family: var(--lat); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+      .footnote .zh { font-family: var(--han); text-transform: none; letter-spacing: 0.04em; margin-left: auto; }
+
+      .badge { position: fixed; left: 0.9rem; bottom: 0.9rem; z-index: 30; font-family: var(--lat); font-size: 0.68rem; letter-spacing: 0.08em; color: var(--muted); background: color-mix(in srgb, var(--ground) 88%, transparent); border: 1px solid var(--rule-strong); border-radius: 2px; padding: 0.2rem 0.6rem; backdrop-filter: blur(6px); }
+
+      @media (max-width: 720px) {
+        :root { --axis-x: 3.6rem; }
+        header.hero { grid-template-columns: 1fr; }
+        header.hero .contact { text-align: left; }
+        .m > .year { font-size: 0.78rem; padding-right: 0.9rem; }
+        .m > .body { padding-left: 1rem; padding-bottom: 1.7rem; }
+        .m .range { display: block; margin: 0.15rem 0 0; }
+        .cluster li { grid-template-columns: 1fr; gap: 0.1rem; }
+        .cluster .d { grid-column: 1; }
+        .brk .cap { font-size: 0.6rem; }
+      }
+      @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <span>huzhigang.com</span>
+        <span>主轴 · Spine</span>
+        <span class="sp">2008 — 2026</span>
+        <button class="theme-toggle" type="button" aria-label="切换到深色模式">暗</button>
+      </div>
+
+      <header class="hero">
+        <div>
+          <h1>胡志刚</h1>
+          <div class="lat-name">HU ZHIGANG</div>
+          <p class="tagline">全栈开发者。写代码，做工具，也写字。这些年做过的事，都挂在这条线上。</p>
+        </div>
+        <div class="contact">
+          <span class="zh">河南</span>
+          <a href="mailto:Hmilyld@gmail.com">Hmilyld@gmail.com</a>
+          <a href="https://github.com/hmilyld">github.com/hmilyld</a>
+          <a href="https://hmilyld.com">hmilyld.com</a>
+        </div>
+      </header>
+
+      <div class="axis-head">
+        <span>2008</span>
+        <span class="note">时间轴 · 下段为压缩比例</span>
+        <span>现在</span>
+      </div>
+
+      <ol class="spine">
+        <li class="m major">
+          <span class="year">2008</span>
+          <div class="body">
+            <h3>河南电力试验研究院<span class="range">2008 — 2011</span></h3>
+            <p class="desc">入行。电力系统的现场与后台，把基础功打在这里。</p>
+          </div>
+        </li>
+        <li class="m">
+          <span class="year">2011</span>
+          <div class="body">
+            <h3>西安格蒂电力有限公司<span class="range">2011 — 2014</span></h3>
+          </div>
+        </li>
+        <li class="m current">
+          <span class="year">2014</span>
+          <div class="body">
+            <h3>河南吉吉信息技术有限公司<span class="range">2014 — 至今</span></h3>
+            <p class="desc">从这一年开始，一边做业务系统，一边把重复的活儿做成自己的工具。</p>
+          </div>
+        </li>
+
+        <li class="brk" aria-hidden="false">
+          <svg width="16" height="26" viewBox="0 0 16 26" aria-hidden="true"><path d="M9 0 L6 8 L11 15 L8 26" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>
+          <span class="cap">比例压缩</span>
+        </li>
+
+        <li class="m">
+          <span class="year">2024</span>
+          <div class="body">
+            <h3>ProjectEnc<span class="kind" style="margin-left:0.75rem">项目</span></h3>
+            <p class="desc">合并、加密、打包 C# 程序的工具集，三合一。</p>
+          </div>
+        </li>
+
+        <li class="m">
+          <span class="year">2026</span>
+          <div class="body">
+            <h3>几个一直在维护的工具<span class="kind" style="margin-left:0.75rem">项目</span></h3>
+            <ul class="cluster">
+              <li>
+                <span class="name"><a href="https://fullstack.hmilyld.com">fullstack-starter</a></span>
+                <p class="d">常规前后端基础框架，四种组合</p>
+                <span class="st active">活跃</span>
+              </li>
+              <li>
+                <span class="name"><a href="https://zchat.cc">zerochat</a></span>
+                <p class="d">端到端加密、阅后即焚</p>
+                <span class="st active">活跃</span>
+              </li>
+              <li>
+                <span class="name"><a href="https://pocketark.hmilyld.com">PocketArk</a></span>
+                <p class="d">Tauri 桌面端基础架构</p>
+                <span class="st wip">开发中</span>
+              </li>
+              <li>
+                <span class="name"><a href="https://github.com/hmilyld/weekly-report">weekly-report</a></span>
+                <p class="d">日报自动生成周报</p>
+                <span class="st">维护</span>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="m">
+          <span class="year">2026</span>
+          <div class="body">
+            <h3>写下来的东西<span class="kind" style="margin-left:0.75rem">写作</span></h3>
+            <ul class="cluster">
+              <li>
+                <span class="name"><a href="https://hmilyld.com/posts/blog-migration-typecho-to-astro">从 Typecho 迁移到 Astro</a></span>
+                <p class="d">2026-09</p>
+                <span class="src">原文</span>
+              </li>
+              <li>
+                <span class="name"><a href="https://hmilyld.com">用 AI 辅助生成软著材料</a></span>
+                <p class="d">2026-08</p>
+                <span class="src">原文</span>
+              </li>
+              <li>
+                <span class="name"><a href="https://hmilyld.com/posts/pocketark-desktop-app-framework">PocketArk 桌面应用框架</a></span>
+                <p class="d">2026-07</p>
+                <span class="src">原文</span>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="endcap">
+          <span class="label">现在</span>
+          <div class="body">
+            <p class="desc">正在构建 ArkDesk 与 PocketArk，把零散的工具整理成一套个人工具链。</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="footnote">
+        <span>Built with Astro · Debian / Docker / Nginx</span>
+        <span>© 2026 Hu Zhigang</span>
+        <span class="zh">身份层，写东西在 hmilyld.com</span>
+      </div>
+    </div>
+
+    <div class="badge">版本 C · 主轴 / Spine</div>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var saved = null;
+        try { saved = localStorage.getItem('demo-theme'); } catch (e) {}
+        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.setAttribute('data-theme', dark ? 'dark' : 'light');
+        function sync() {
+          var b = document.querySelector('.theme-toggle');
+          if (!b) return;
+          var d = root.getAttribute('data-theme') === 'dark';
+          b.textContent = d ? '浅色' : '深色';
+          b.setAttribute('aria-label', d ? '切换到浅色模式' : '切换到深色模式');
+        }
+        document.addEventListener('click', function (e) {
+          if (!e.target.closest('.theme-toggle')) return;
+          var d = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', d);
+          try { localStorage.setItem('demo-theme', d); } catch (err) {}
+          sync();
+        });
+        sync();
+      })();
+    </script>
+  </body>
+</html>

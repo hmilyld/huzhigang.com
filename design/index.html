@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>huzhigang.com — 设计风格示意</title>
+    <style>
+      :root {
+        --bg: #f4f2ee;
+        --fg: #1b1a18;
+        --soft: #6d6a63;
+        --line: #d8d4ca;
+        --card: #fbfaf7;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root { --bg: #16161a; --fg: #ecebe6; --soft: #9b9890; --line: #2e2e34; --card: #1d1d22; }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: var(--bg); color: var(--fg);
+        font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+        line-height: 1.75; -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1020px; margin: 0 auto; padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 5vw, 2.5rem) 6rem; }
+      h1 { font-size: clamp(1.6rem, 4vw, 2.25rem); line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 0.6rem; }
+      h2 { font-size: 1.05rem; letter-spacing: 0.02em; margin: 3.5rem 0 1.1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--line); }
+      h2 .tag { font-weight: 400; color: var(--soft); font-size: 0.85rem; margin-left: 0.7rem; }
+      .lead { color: var(--soft); max-width: 46em; margin: 0 0 0.5rem; font-size: 0.98rem; }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; }
+      .grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+      a.card {
+        display: flex; flex-direction: column; gap: 0.75rem;
+        background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+        padding: 1.4rem 1.4rem 1.5rem; text-decoration: none; color: inherit;
+        transition: border-color 150ms ease;
+      }
+      a.card:hover { border-color: var(--fg); }
+      a.card.old { opacity: 0.72; }
+      .idx { font-variant-numeric: tabular-nums; color: var(--soft); font-size: 0.75rem; letter-spacing: 0.1em; }
+      .name { font-size: 1.28rem; font-weight: 600; letter-spacing: -0.01em; }
+      .principle { font-size: 0.8rem; color: var(--soft); }
+      .principle b { color: var(--fg); font-weight: 600; }
+      .desc { color: var(--soft); font-size: 0.87rem; margin: 0; }
+      .type { font-size: 0.76rem; color: var(--soft); }
+      .sw { display: flex; gap: 0.35rem; margin-top: auto; padding-top: 0.5rem; }
+      .sw i { width: 24px; height: 24px; border-radius: 5px; border: 1px solid rgba(125,125,125,0.25); }
+      footer { margin-top: 3.5rem; color: var(--soft); font-size: 0.82rem; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>huzhigang.com · 设计风格示意</h1>
+      <p class="lead">
+        第二轮换了 <b>布局的组织原理</b>，不只是换色。四套用同一套内容，各有不同的结构逻辑，零卡片、零等宽字体。
+        点开任意一套，可切换明暗；版本 D 默认是蓝晒深色。
+      </p>
+
+      <h2>第二轮 · 布局重构<span class="tag">本次重点</span></h2>
+      <div class="grid">
+        <a class="card" href="./5-index.html">
+          <span class="idx">版本 A</span>
+          <span class="name">索引 · Index</span>
+          <span class="principle">组织原理：<b>对齐与密度</b></span>
+          <p class="desc">首页就是一张排印精良的目录：没有英雄图，没有卡片，整页由横线和列构成。名称、项目、写作、履历全部对齐可扫读。</p>
+          <span class="type">制图纸冷灰白 · Archivo（标题拉伸）+ 思源黑体</span>
+          <span class="sw"><i style="background:#edf0f2"></i><i style="background:#16202b"></i><i style="background:#5b6b7a"></i><i style="background:#c6d0d8"></i><i style="background:#1f4e79"></i></span>
+        </a>
+
+        <a class="card" href="./6-rail.html">
+          <span class="idx">版本 B</span>
+          <span class="name">固定栏 · Rail</span>
+          <span class="principle">组织原理：<b>持存</b></span>
+          <p class="desc">左侧一条固定栏永远显示身份、导航与联系方式，右侧单栏滚动内容。身份不再被滚走。</p>
+          <span class="type">工作台钢灰 + 安全橙 · Overpass + 思源黑体</span>
+          <span class="sw"><i style="background:#eeede9"></i><i style="background:#26282b"></i><i style="background:#6e7276"></i><i style="background:#d4d6d2"></i><i style="background:#c2670f"></i></span>
+        </a>
+
+        <a class="card" href="./7-spine.html">
+          <span class="idx">版本 C</span>
+          <span class="name">主轴 · Spine</span>
+          <span class="principle">组织原理：<b>时间</b></span>
+          <p class="desc">一条从 2008 到现在的垂直轴线，履历、项目、写作按年份挂在轴上。2024 前的空档用图纸的比例压缩符号表示。</p>
+          <span class="type">制图纸 · Archivo（表格数字）+ 思源黑体</span>
+          <span class="sw"><i style="background:#edf0f2"></i><i style="background:#16202b"></i><i style="background:#5b6b7a"></i><i style="background:#c6d0d8"></i><i style="background:#1f4e79"></i></span>
+        </a>
+
+        <a class="card" href="./8-sheet.html">
+          <span class="idx">版本 D</span>
+          <span class="name">图纸 · Sheet</span>
+          <span class="principle">组织原理：<b>图纸本体</b></span>
+          <p class="desc">整站是一张带标题栏的工程图：项目作「明细表」，写作作「修订记录」，姓名/坐标/技术/站点作标题栏。桌面一屏装下。</p>
+          <span class="type">默认蓝晒深色 · Archivo（拉伸）+ 思源黑体</span>
+          <span class="sw"><i style="background:#0e2233"></i><i style="background:#dce7f0"></i><i style="background:#8fa6b8"></i><i style="background:#24384a"></i><i style="background:#7fb3e0"></i></span>
+        </a>
+      </div>
+
+      <h2>第一轮 · 配色探索<span class="tag">v1，仅留档对比</span></h2>
+      <div class="grid">
+        <a class="card old" href="./1-luokuan.html">
+          <span class="idx">风格一</span><span class="name">落款 · 印章</span>
+          <p class="desc">宣纸、墨、朱红印章。霞鹜文楷 + Newsreader。</p>
+          <span class="sw"><i style="background:#faf8f3"></i><i style="background:#1a1917"></i><i style="background:#6e6b63"></i><i style="background:#d9d5ca"></i><i style="background:#b23a2e"></i></span>
+        </a>
+        <a class="card old" href="./2-blueprint.html">
+          <span class="idx">风格二</span><span class="name">图纸 · Blueprint</span>
+          <p class="desc">旧版图纸：标题栏与规格表，但仍是英雄区 + 分段堆叠。</p>
+          <span class="sw"><i style="background:#edf0f2"></i><i style="background:#16202b"></i><i style="background:#5b6b7a"></i><i style="background:#c6d0d8"></i><i style="background:#1f4e79"></i></span>
+        </a>
+        <a class="card old" href="./3-workbench.html">
+          <span class="idx">风格三</span><span class="name">工作台 · Workbench</span>
+          <p class="desc">旧版工作台：整齐的圆角卡片（本轮已弃用卡片）。</p>
+          <span class="sw"><i style="background:#eeede9"></i><i style="background:#26282b"></i><i style="background:#6e7276"></i><i style="background:#d4d6d2"></i><i style="background:#c2670f"></i></span>
+        </a>
+        <a class="card old" href="./4-letterpress.html">
+          <span class="idx">风格四</span><span class="name">活版 · Letterpress</span>
+          <p class="desc">铅字压痕、专色压印线。思源宋体 + Besley。</p>
+          <span class="sw"><i style="background:#f5f3ee"></i><i style="background:#202124"></i><i style="background:#6e6a63"></i><i style="background:#dcd7cc"></i><i style="background:#1e3a5f"></i></span>
+        </a>
+      </div>
+
+      <footer>
+        全部文件可独立打开，字体走 <code>cdn.jsdelivr.net</code>；断网时回退系统字体，仍可读。
+      </footer>
+    </div>
+  </body>
+</html>

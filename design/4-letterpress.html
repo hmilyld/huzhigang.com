@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>风格四 · 活版 · Letterpress — huzhigang.com 设计示意</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5/index.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/besley@5/index.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/source-serif-4@5/index.css" />
+    <style>
+      :root {
+        --paper: #f5f3ee;
+        --ink: #202124;
+        --soft: #6e6a63;
+        --faint: #9a958b;
+        --rule: #dcd7cc;
+        --spot: #1e3a5f;
+        --press: #e8e3d9;
+        --press-hi: rgba(255, 255, 255, 0.85);
+        --press-lo: rgba(32, 33, 36, 0.22);
+        --pad: clamp(1.5rem, 6vw, 6rem);
+        --col: 860px;
+        --serif: "Noto Serif SC", "Songti SC", "SimSun", serif;
+        --lat-display: "Besley", Georgia, serif;
+        --lat-body: "Source Serif 4 Variable", "Besley", Georgia, serif;
+      }
+      html[data-theme="dark"] {
+        --paper: #15161a;
+        --ink: #e9e7e2;
+        --soft: #97938b;
+        --faint: #6d6a64;
+        --rule: #312f2b;
+        --spot: #7fa6d4;
+        --press: #1d1f24;
+        --press-hi: rgba(255, 255, 255, 0.06);
+        --press-lo: rgba(0, 0, 0, 0.55);
+      }
+      * { box-sizing: border-box; }
+      html { background: var(--paper); color-scheme: light; }
+      html[data-theme="dark"] { color-scheme: dark; }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--serif);
+        font-size: 16px;
+        line-height: 1.95;
+        -webkit-font-smoothing: antialiased;
+        transition: background-color 200ms ease, color 200ms ease;
+      }
+      a { color: inherit; text-decoration: none; }
+      ::selection { background: var(--spot); color: var(--paper); }
+      :focus-visible { outline: 2px solid var(--spot); outline-offset: 4px; }
+      .lat { font-family: var(--lat-body); }
+
+      .nav {
+        position: sticky; top: 0; z-index: 20;
+        display: flex; align-items: center; gap: 1.25rem;
+        padding: 1rem var(--pad);
+        background: color-mix(in srgb, var(--paper) 88%, transparent);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--rule);
+      }
+      .nav .brand { font-size: 0.98rem; letter-spacing: 0.06em; }
+      .nav .brand .lat { font-family: var(--lat-display); font-style: italic; color: var(--soft); margin-left: 0.5rem; font-size: 0.92rem; }
+      .nav .links { margin-left: auto; display: flex; align-items: center; gap: clamp(0.9rem, 2.5vw, 1.8rem); font-size: 0.9rem; color: var(--soft); }
+      .nav .links a:hover { color: var(--spot); }
+      .theme-toggle {
+        width: 2.2rem; height: 2.2rem; display: inline-flex; align-items: center; justify-content: center;
+        font-family: var(--serif); font-size: 0.92rem; line-height: 1; color: var(--soft);
+        background: transparent; border: 1px solid var(--rule); border-radius: 2px; cursor: pointer;
+        transition: color 150ms ease, border-color 150ms ease;
+      }
+      .theme-toggle:hover { color: var(--spot); border-color: var(--spot); }
+
+      .wrap { max-width: calc(var(--col) + 2 * var(--pad)); margin: 0 auto; padding: 0 var(--pad); }
+
+      /* ── cover ─────────────────────────────────────── */
+      .cover { position: relative; padding: clamp(3rem, 11vh, 8rem) 0 clamp(3rem, 8vh, 5rem); border-bottom: 1px solid var(--rule); }
+      .deboss {
+        display: block; font-family: var(--lat-display); font-weight: 700; font-style: italic;
+        font-size: clamp(3rem, 13vw, 9rem); line-height: 0.9; letter-spacing: -0.02em;
+        color: var(--press);
+        text-shadow: 0 1px 0 var(--press-hi), 0 -1px 1px var(--press-lo);
+        user-select: none; margin-bottom: clamp(-2.6rem, -5vw, -1rem);
+      }
+      .cover-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(1.5rem, 5vw, 4rem); align-items: end; position: relative; }
+      h1.name { margin: 0; font-size: clamp(2.5rem, 7vw, 4.5rem); font-weight: 600; line-height: 1.05; letter-spacing: 0.06em; }
+      .rule { width: clamp(3rem, 8vw, 6rem); height: 3px; background: var(--spot); margin: 1.4rem 0 1.3rem; }
+      .position { margin: 0; font-size: clamp(1.02rem, 1.5vw, 1.18rem); max-width: 24em; }
+      .colophon { border-top: 1px solid var(--rule); padding-top: 0.9rem; font-size: 0.86rem; color: var(--soft); }
+      .colophon dl { margin: 0; display: grid; grid-template-columns: 4.5rem 1fr; gap: 0.35rem 0.75rem; }
+      .colophon dt { color: var(--faint); }
+      .colophon dd { margin: 0; }
+
+      /* ── sections ──────────────────────────────────── */
+      .sect { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); padding: clamp(2.25rem, 5vh, 3.25rem) 0; border-bottom: 1px solid var(--rule); }
+      .sect > .label { font-family: var(--lat-display); font-style: italic; font-size: 1.05rem; color: var(--spot); padding-top: 0.35rem; }
+      .sect > .label .zh { display: block; font-family: var(--serif); font-style: normal; font-size: 0.85rem; color: var(--faint); letter-spacing: 0.16em; margin-top: 0.15rem; }
+      .sect .body > :first-child { margin-top: 0; }
+      .more { font-family: var(--lat-body); font-size: 0.9rem; color: var(--spot); border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+      .more:hover { border-color: var(--spot); }
+
+      .now p { margin: 0 0 0.5rem; max-width: 38em; }
+      .stamp { font-family: var(--lat-body); font-size: 0.85rem; color: var(--faint); letter-spacing: 0.04em; }
+
+      .entries { list-style: none; margin: 0; padding: 0; }
+      .entries li { padding: 1.05rem 0; border-top: 1px solid var(--rule); }
+      .entries li:first-child { border-top: 0; padding-top: 0; }
+      .entries .title { font-size: 1.13rem; letter-spacing: 0.02em; }
+      .entries .title a { border-bottom: 1px solid transparent; transition: border-color 150ms ease; }
+      .entries .title a:hover { border-color: var(--spot); }
+      .entries .desc { margin: 0.2rem 0 0; color: var(--soft); font-size: 0.94rem; line-height: 1.8; max-width: 40em; }
+      .entries .meta { margin-top: 0.4rem; font-family: var(--lat-body); font-size: 0.82rem; color: var(--faint); letter-spacing: 0.05em; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; }
+      .entries .meta .zh { font-family: var(--serif); letter-spacing: 0.1em; }
+      .entries .meta .active { color: var(--spot); }
+
+      .timeline { list-style: none; margin: 0; padding: 0; }
+      .timeline li { display: grid; grid-template-columns: 9rem 1fr; gap: 1.5rem; padding: 0.7rem 0; border-top: 1px solid var(--rule); }
+      .timeline li:first-child { border-top: 0; }
+      .timeline .yr { font-family: var(--lat-body); color: var(--soft); font-size: 0.92rem; letter-spacing: 0.03em; }
+
+      .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; font-size: 0.95rem; }
+      .contact a { border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+      .contact a:hover { border-color: var(--spot); }
+
+      footer.foot { max-width: calc(var(--col) + 2 * var(--pad)); margin: 0 auto; padding: 2rem var(--pad) 4rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-size: 0.84rem; color: var(--faint); }
+
+      .badge { position: fixed; left: 0.9rem; bottom: 0.9rem; z-index: 30; font-family: var(--lat-body); font-size: 0.72rem; letter-spacing: 0.05em; color: var(--soft); background: color-mix(in srgb, var(--paper) 85%, transparent); border: 1px solid var(--rule); border-radius: 999px; padding: 0.2rem 0.7rem; backdrop-filter: blur(6px); }
+
+      @media (max-width: 720px) {
+        .cover-grid { grid-template-columns: 1fr; align-items: start; gap: 2rem; }
+        .sect { grid-template-columns: 1fr; gap: 0.75rem; }
+        .sect > .label { padding-top: 0; }
+        .timeline li { grid-template-columns: 1fr; gap: 0.1rem; }
+      }
+      @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <span class="brand">胡志刚<span class="lat">Hmilyld</span></span>
+      <nav class="links">
+        <a href="#projects">项目</a>
+        <a href="#writing">写作</a>
+        <a href="#about">关于</a>
+        <a href="#contact">联系</a>
+        <button class="theme-toggle" type="button" aria-label="切换到深色模式">暗</button>
+      </nav>
+    </header>
+
+    <div class="wrap">
+      <section class="cover">
+        <span class="deboss" aria-hidden="true">Hmilyld</span>
+        <div class="cover-grid">
+          <div>
+            <h1 class="name">胡志刚</h1>
+            <div class="rule" aria-hidden="true"></div>
+            <p class="position">全栈开发者。写代码，做工具，也写字。</p>
+          </div>
+          <div class="colophon">
+            <dl>
+              <dt>姓名</dt><dd>胡志刚</dd>
+              <dt class="lat">Handle</dt><dd class="lat">Hmilyld</dd>
+              <dt>坐标</dt><dd>河南</dd>
+              <dt>技术</dt><dd class="lat" style="font-size:0.92em">Java · Python · Vue · TS</dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="sect now">
+        <div class="label">Now<span class="zh">现在</span></div>
+        <div class="body">
+          <p>正在构建 ArkDesk 与 PocketArk，把零散的工具整理成一套个人工具链。</p>
+          <span class="stamp">更新于 2026-09</span>
+        </div>
+      </section>
+
+      <section class="sect" id="projects">
+        <div class="label">Works<span class="zh">项目</span></div>
+        <div class="body">
+          <ul class="entries">
+            <li>
+              <div class="title"><a href="https://fullstack.hmilyld.com">fullstack-starter</a></div>
+              <p class="desc">常规前后端基础框架，支持 Vue / React × Java / Python 四种组合。</p>
+              <div class="meta"><span class="lat">TypeScript</span><span class="zh active">活跃</span><span class="lat">fullstack.hmilyld.com</span></div>
+            </li>
+            <li>
+              <div class="title"><a href="https://zchat.cc">zerochat</a></div>
+              <p class="desc">端到端加密、阅后即焚的通讯，加密全在浏览器端完成，服务器零信任。</p>
+              <div class="meta"><span class="lat">TypeScript</span><span class="zh active">活跃</span><span class="lat">zchat.cc</span></div>
+            </li>
+            <li>
+              <div class="title"><a href="https://dotnet.hmilyld.com">ProjectEnc</a></div>
+              <p class="desc">合并、加密、打包 C# 程序的工具集，三合一。</p>
+              <div class="meta"><span class="lat">Inno Setup</span><span class="zh">维护</span><span class="lat">dotnet.hmilyld.com</span></div>
+            </li>
+            <li>
+              <div class="title"><a href="https://pocketark.hmilyld.com">PocketArk</a></div>
+              <p class="desc">基于 Tauri 的桌面端基础架构，含生命周期钩子与插件目录规范。</p>
+              <div class="meta"><span class="lat">Vue</span><span class="zh">开发中</span><span class="lat">pocketark.hmilyld.com</span></div>
+            </li>
+          </ul>
+          <p style="margin-top:1.2rem"><a class="more" href="https://github.com/hmilyld">全部仓库 →</a></p>
+        </div>
+      </section>
+
+      <section class="sect" id="writing">
+        <div class="label">Prose<span class="zh">写作</span></div>
+        <div class="body">
+          <ul class="entries">
+            <li>
+              <div class="title"><a href="https://hmilyld.com/posts/blog-migration-typecho-to-astro">从 Typecho 迁移到 Astro 的记录</a></div>
+              <div class="meta"><span class="lat">2026-09</span><span>为什么换、怎么迁、踩了哪些坑</span></div>
+            </li>
+            <li>
+              <div class="title"><a href="https://hmilyld.com">用 AI 辅助生成软著材料</a></div>
+              <div class="meta"><span class="lat">2026-08</span><span>流程、提示词与人工校验的边界</span></div>
+            </li>
+            <li>
+              <div class="title"><a href="https://hmilyld.com/posts/pocketark-desktop-app-framework">PocketArk：一个桌面应用基础框架</a></div>
+              <div class="meta"><span class="lat">2026-07</span><span>从零搭一套能复用的桌面端骨架</span></div>
+            </li>
+          </ul>
+          <p style="margin-top:1.2rem"><a class="more" href="https://hmilyld.com">hmilyld.com →</a></p>
+        </div>
+      </section>
+
+      <section class="sect" id="about">
+        <div class="label">Profile<span class="zh">关于</span></div>
+        <div class="body">
+          <ul class="timeline">
+            <li><span class="yr">2008 — 2011</span><span>河南电力试验研究院</span></li>
+            <li><span class="yr">2011 — 2014</span><span>西安格蒂电力有限公司</span></li>
+            <li><span class="yr">2014 — 至今</span><span>河南吉吉信息技术有限公司</span></li>
+          </ul>
+          <p style="margin-top:1.2rem;color:var(--soft);max-width:38em">这个域名是身份层：你是谁、做过什么、怎么联系。写东西在 hmilyld.com。</p>
+        </div>
+      </section>
+
+      <section class="sect" id="contact">
+        <div class="label">Write<span class="zh">联系</span></div>
+        <div class="body">
+          <div class="contact">
+            <a href="mailto:Hmilyld@gmail.com" class="lat">Hmilyld@gmail.com</a>
+            <a href="https://github.com/hmilyld" class="lat">github.com/hmilyld</a>
+            <a href="https://hmilyld.com" class="lat">hmilyld.com</a>
+            <a href="https://hmilyld.com/rss.xml">RSS</a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="foot">
+      <span>本站用 Astro 构建 · Debian / Docker / Nginx</span>
+      <span>© 2026 胡志刚</span>
+    </footer>
+
+    <div class="badge">风格 4 / 4 · 活版</div>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var saved = null;
+        try { saved = localStorage.getItem('demo-theme'); } catch (e) {}
+        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.setAttribute('data-theme', dark ? 'dark' : 'light');
+        function sync() {
+          var b = document.querySelector('.theme-toggle');
+          if (!b) return;
+          var d = root.getAttribute('data-theme') === 'dark';
+          b.textContent = d ? '明' : '暗';
+          b.setAttribute('aria-label', d ? '切换到浅色模式' : '切换到深色模式');
+        }
+        document.addEventListener('click', function (e) {
+          if (!e.target.closest('.theme-toggle')) return;
+          var d = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', d);
+          try { localStorage.setItem('demo-theme', d); } catch (err) {}
+          sync();
+        });
+        sync();
+      })();
+    </script>
+  </body>
+</html>

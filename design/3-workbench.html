@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>风格三 · 工作台 · Workbench — huzhigang.com 设计示意</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cn-fontsource-smiley-sans-oblique-regular@1/font.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5/index.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/archivo@5/index.css" />
+    <style>
+      :root {
+        --ground: #eeede9;
+        --surface: #f7f6f3;
+        --ink: #26282b;
+        --muted: #6e7276;
+        --line: #d4d6d2;
+        --line-strong: #b9bcb6;
+        --accent: #c2670f;
+        --ok: #2f7d4f;
+        --hole: rgba(38, 40, 43, 0.09);
+        --pad: clamp(1.25rem, 5vw, 4rem);
+        --col: 900px;
+        --sans: "Noto Sans SC", "PingFang SC", system-ui, sans-serif;
+        --lat: "Archivo Variable", system-ui, sans-serif;
+        --display: "Smiley Sans Oblique", "Noto Sans SC", system-ui, sans-serif;
+      }
+      html[data-theme="dark"] {
+        --ground: #1a1c1e;
+        --surface: #202225;
+        --ink: #e7e8e5;
+        --muted: #9aa0a4;
+        --line: #303336;
+        --line-strong: #41454a;
+        --accent: #dd7f2a;
+        --ok: #5fb37f;
+        --hole: rgba(231, 232, 229, 0.07);
+      }
+      * { box-sizing: border-box; }
+      html { background: var(--ground); color-scheme: light; }
+      html[data-theme="dark"] { color-scheme: dark; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.75;
+        background-color: var(--ground);
+        background-image: radial-gradient(var(--hole) 1.5px, transparent 1.6px);
+        background-size: 22px 22px;
+        -webkit-font-smoothing: antialiased;
+        transition: background-color 200ms ease, color 200ms ease;
+      }
+      a { color: inherit; text-decoration: none; }
+      :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+      .display { font-family: var(--display); font-weight: 400; letter-spacing: 0.01em; }
+
+      .nav {
+        position: sticky; top: 0; z-index: 20;
+        display: flex; align-items: center; gap: 1.25rem;
+        padding: 0.85rem var(--pad);
+        background: color-mix(in srgb, var(--ground) 90%, transparent);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav .brand { font-family: var(--display); font-size: 1.15rem; letter-spacing: 0.02em; }
+      .nav .count { font-family: var(--lat); font-size: 0.72rem; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 0.1rem 0.55rem; }
+      .nav .links { margin-left: auto; display: flex; align-items: center; gap: clamp(0.85rem, 2.4vw, 1.6rem); font-size: 0.85rem; color: var(--muted); }
+      .nav .links a:hover { color: var(--ink); }
+      .theme-toggle {
+        width: 2.1rem; height: 2.1rem; display: inline-flex; align-items: center; justify-content: center;
+        font-family: var(--sans); font-size: 0.85rem; line-height: 1; color: var(--muted);
+        background: transparent; border: 1px solid var(--line-strong); border-radius: 6px; cursor: pointer;
+        transition: color 150ms ease, border-color 150ms ease;
+      }
+      .theme-toggle:hover { color: var(--ink); border-color: var(--ink); }
+
+      .wrap { max-width: calc(var(--col) + 2 * var(--pad)); margin: 0 auto; padding: 0 var(--pad); }
+
+      /* ── cover ─────────────────────────────────────── */
+      .cover { padding: clamp(3rem, 10vh, 7rem) 0 clamp(2.5rem, 6vh, 4rem); border-bottom: 1px solid var(--line); }
+      .kicker { font-family: var(--lat); font-size: 0.78rem; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; margin: 0 0 1rem; }
+      h1.name { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(3.25rem, 12vw, 8rem); line-height: 0.94; letter-spacing: 0.01em; }
+      .pinyin { font-family: var(--lat); font-weight: 600; font-size: clamp(1rem, 2.4vw, 1.4rem); letter-spacing: 0.12em; color: var(--accent); margin: 0.9rem 0 0; }
+      .position { font-size: clamp(1.05rem, 1.6vw, 1.25rem); margin: 1.6rem 0 0; max-width: 26em; }
+      .cover-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; margin-top: 1.75rem; font-family: var(--lat); font-size: 0.82rem; color: var(--muted); }
+      .cover-meta b { color: var(--ink); font-weight: 600; }
+
+      /* ── sections ──────────────────────────────────── */
+      .sect { padding: clamp(2.5rem, 6vh, 4rem) 0; border-bottom: 1px solid var(--line); }
+      .sect-head { display: flex; align-items: baseline; gap: 0.9rem; margin-bottom: 1.5rem; }
+      .sect-head h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(1.4rem, 3vw, 1.9rem); }
+      .sect-head .en { font-family: var(--lat); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+      .sect-head .more { margin-left: auto; font-size: 0.85rem; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 2px; transition: color 150ms ease, border-color 150ms ease; }
+      .sect-head .more:hover { color: var(--accent); border-color: var(--accent); }
+
+      .now p { margin: 0; max-width: 40em; font-size: 1.02rem; }
+      .now .stamp { display: block; margin-top: 0.5rem; font-family: var(--lat); font-size: 0.78rem; color: var(--muted); letter-spacing: 0.06em; }
+
+      .tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+      .tool {
+        position: relative; display: flex; flex-direction: column; gap: 0.55rem;
+        background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+        padding: 1.15rem 1.25rem 1.25rem;
+        transition: border-color 150ms ease, transform 150ms ease;
+      }
+      .tool:hover { border-color: var(--accent); }
+      .tool .no { font-family: var(--lat); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.08em; color: var(--accent); }
+      .tool h3 { margin: 0; font-family: var(--lat); font-weight: 600; font-size: 1.08rem; letter-spacing: -0.01em; }
+      .tool h3 a { border-bottom: 1px solid transparent; }
+      .tool h3 a:hover { border-color: var(--ink); }
+      .tool .desc { margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+      .tool .meta { margin-top: auto; padding-top: 0.6rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; font-size: 0.78rem; }
+      .tag { font-family: var(--lat); font-size: 0.72rem; letter-spacing: 0.03em; color: var(--muted); border: 1px solid var(--line); border-radius: 5px; padding: 0.1rem 0.45rem; }
+      .stat { margin-left: auto; display: inline-flex; align-items: center; gap: 0.35rem; color: var(--muted); }
+      .stat i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); display: inline-block; }
+      .stat.active { color: var(--ok); } .stat.active i { background: var(--ok); }
+      .stat.wip { color: var(--accent); } .stat.wip i { background: var(--accent); }
+
+      .writes { list-style: none; margin: 0; padding: 0; }
+      .writes li { display: grid; grid-template-columns: 5.5rem 1fr auto; gap: 1.25rem; align-items: baseline; padding: 0.8rem 0; border-top: 1px solid var(--line); }
+      .writes li:first-child { border-top: 0; }
+      .writes .date { font-family: var(--lat); font-size: 0.78rem; color: var(--muted); }
+      .writes .t { font-size: 0.98rem; }
+      .writes .t a { border-bottom: 1px solid transparent; }
+      .writes .t a:hover { border-color: var(--ink); }
+      .writes .src { font-size: 0.75rem; color: var(--muted); }
+
+      .tl { list-style: none; margin: 0; padding: 0; }
+      .tl li { display: grid; grid-template-columns: 10.5rem 1fr; gap: 1.5rem; padding: 0.7rem 0; border-top: 1px solid var(--line); }
+      .tl li:first-child { border-top: 0; }
+      .tl .yr { font-family: var(--lat); font-size: 0.82rem; color: var(--muted); }
+      .tl .org { font-size: 0.98rem; }
+
+      .contact { display: flex; flex-wrap: wrap; gap: 0.6rem 1.75rem; font-size: 0.95rem; }
+      .contact a { border-bottom: 1px solid var(--line); padding-bottom: 2px; transition: border-color 150ms ease; }
+      .contact a:hover { border-color: var(--accent); }
+      .contact .lat { font-family: var(--lat); }
+
+      footer.foot { max-width: calc(var(--col) + 2 * var(--pad)); margin: 0 auto; padding: 2rem var(--pad) 4rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-size: 0.8rem; color: var(--muted); }
+
+      .badge { position: fixed; left: 0.9rem; bottom: 0.9rem; z-index: 30; font-family: var(--lat); font-size: 0.7rem; letter-spacing: 0.06em; color: var(--muted); background: color-mix(in srgb, var(--ground) 88%, transparent); border: 1px solid var(--line-strong); border-radius: 999px; padding: 0.2rem 0.7rem; backdrop-filter: blur(6px); }
+
+      @media (max-width: 700px) {
+        .tools { grid-template-columns: 1fr; }
+        .writes li { grid-template-columns: 1fr; gap: 0.15rem; }
+        .tl li { grid-template-columns: 1fr; gap: 0.1rem; }
+      }
+      @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <span class="brand">胡志刚</span>
+      <span class="count">12 件在册</span>
+      <nav class="links">
+        <a href="#projects">项目</a>
+        <a href="#writing">写作</a>
+        <a href="#about">关于</a>
+        <a href="#contact">联系</a>
+        <button class="theme-toggle" type="button" aria-label="切换到深色模式">暗</button>
+      </nav>
+    </header>
+
+    <div class="wrap">
+      <section class="cover">
+        <p class="kicker">Workbench · 工具与作品</p>
+        <h1 class="name display">胡志刚</h1>
+        <p class="pinyin">HU ZHIGANG</p>
+        <p class="position">全栈开发者。写代码，做工具，把重复的事收成一件件能用的东西。</p>
+        <div class="cover-meta">
+          <span><b>18</b> 年从业</span>
+          <span><b>12</b> 个仓库</span>
+          <span>Java / Python / Vue / TS</span>
+          <span>河南</span>
+        </div>
+      </section>
+
+      <section class="sect now">
+        <div class="sect-head"><h2 class="display">现在</h2><span class="en">Now</span></div>
+        <p>正在构建 ArkDesk 与 PocketArk，把零散的工具整理成一套个人工具链。</p>
+        <span class="stamp">更新于 2026-09</span>
+      </section>
+
+      <section class="sect" id="projects">
+        <div class="sect-head"><h2 class="display">项目</h2><span class="en">Tools</span><a class="more" href="https://github.com/hmilyld">全部仓库 →</a></div>
+        <div class="tools">
+          <article class="tool">
+            <span class="no">01</span>
+            <h3><a href="https://fullstack.hmilyld.com">fullstack-starter</a></h3>
+            <p class="desc">常规前后端基础框架，支持 Vue / React × Java / Python 四种组合。</p>
+            <div class="meta"><span class="tag">TypeScript</span><span class="tag">脚手架</span><span class="stat active"><i></i>活跃</span></div>
+          </article>
+          <article class="tool">
+            <span class="no">02</span>
+            <h3><a href="https://zchat.cc">zerochat</a></h3>
+            <p class="desc">端到端加密、阅后即焚的通讯，加密全在浏览器端完成。</p>
+            <div class="meta"><span class="tag">TypeScript</span><span class="tag">通讯</span><span class="stat active"><i></i>活跃</span></div>
+          </article>
+          <article class="tool">
+            <span class="no">03</span>
+            <h3><a href="https://dotnet.hmilyld.com">ProjectEnc</a></h3>
+            <p class="desc">合并、加密、打包 C# 程序的工具集，三合一，省掉手工步骤。</p>
+            <div class="meta"><span class="tag">Inno Setup</span><span class="tag">工具</span><span class="stat">维护</span></div>
+          </article>
+          <article class="tool">
+            <span class="no">04</span>
+            <h3><a href="https://pocketark.hmilyld.com">PocketArk</a></h3>
+            <p class="desc">基于 Tauri 的桌面端基础架构，含生命周期钩子与插件目录规范。</p>
+            <div class="meta"><span class="tag">Vue</span><span class="tag">桌面</span><span class="stat wip"><i></i>开发中</span></div>
+          </article>
+          <article class="tool">
+            <span class="no">05</span>
+            <h3><a href="https://github.com/hmilyld/weekly-report">weekly-report</a></h3>
+            <p class="desc">日报自动生成周报，把每天零散的记录收成一份能交出去的东西。</p>
+            <div class="meta"><span class="tag">JavaScript</span><span class="tag">效率</span><span class="stat">维护</span></div>
+          </article>
+          <article class="tool">
+            <span class="no">06</span>
+            <h3><a href="https://github.com/hmilyld/doc2md">doc2md</a></h3>
+            <p class="desc">文档转 Markdown，处理格式与图片的小工具。</p>
+            <div class="meta"><span class="tag">HTML</span><span class="tag">工具</span><span class="stat">维护</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="sect" id="writing">
+        <div class="sect-head"><h2 class="display">写作</h2><span class="en">Writing</span><a class="more" href="https://hmilyld.com">hmilyld.com →</a></div>
+        <ul class="writes">
+          <li><span class="date">2026-09</span><span class="t"><a href="https://hmilyld.com/posts/blog-migration-typecho-to-astro">从 Typecho 迁移到 Astro 的记录</a></span><span class="src">原文</span></li>
+          <li><span class="date">2026-08</span><span class="t"><a href="https://hmilyld.com">用 AI 辅助生成软著材料</a></span><span class="src">原文</span></li>
+          <li><span class="date">2026-07</span><span class="t"><a href="https://hmilyld.com/posts/pocketark-desktop-app-framework">PocketArk：一个桌面应用基础框架</a></span><span class="src">原文</span></li>
+          <li><span class="date">2026-06</span><span class="t"><a href="https://hmilyld.com/posts/docker-tomcat-mysql-nginx">Debian + Docker 部署笔记</a></span><span class="src">原文</span></li>
+        </ul>
+      </section>
+
+      <section class="sect" id="about">
+        <div class="sect-head"><h2 class="display">关于</h2><span class="en">Profile</span></div>
+        <ul class="tl">
+          <li><span class="yr">2008 — 2011</span><span class="org">河南电力试验研究院</span></li>
+          <li><span class="yr">2011 — 2014</span><span class="org">西安格蒂电力有限公司</span></li>
+          <li><span class="yr">2014 — 至今</span><span class="org">河南吉吉信息技术有限公司</span></li>
+        </ul>
+      </section>
+
+      <section class="sect" id="contact">
+        <div class="sect-head"><h2 class="display">联系</h2><span class="en">Contact</span></div>
+        <div class="contact">
+          <a href="mailto:Hmilyld@gmail.com" class="lat">Hmilyld@gmail.com</a>
+          <a href="https://github.com/hmilyld" class="lat">github.com/hmilyld</a>
+          <a href="https://hmilyld.com" class="lat">hmilyld.com</a>
+          <a href="https://hmilyld.com/rss.xml">RSS</a>
+        </div>
+      </section>
+    </div>
+
+    <footer class="foot">
+      <span>本站用 Astro 构建 · Debian / Docker / Nginx</span>
+      <span>© 2026 胡志刚</span>
+    </footer>
+
+    <div class="badge">风格 3 / 4 · 工作台</div>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var saved = null;
+        try { saved = localStorage.getItem('demo-theme'); } catch (e) {}
+        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.setAttribute('data-theme', dark ? 'dark' : 'light');
+        function sync() {
+          var b = document.querySelector('.theme-toggle');
+          if (!b) return;
+          var d = root.getAttribute('data-theme') === 'dark';
+          b.textContent = d ? '明' : '暗';
+          b.setAttribute('aria-label', d ? '切换到浅色模式' : '切换到深色模式');
+        }
+        document.addEventListener('click', function (e) {
+          if (!e.target.closest('.theme-toggle')) return;
+          var d = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', d);
+          try { localStorage.setItem('demo-theme', d); } catch (err) {}
+          sync();
+        });
+        sync();
+      })();
+    </script>
+  </body>
+</html>

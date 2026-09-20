@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>风格一 · 落款 · 印章 — huzhigang.com 设计示意</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/newsreader@5.3.0/index.css" />
+    <style>
+      :root {
+        --paper: #faf8f3;
+        --ink: #1a1917;
+        --soft: #6e6b63;
+        --faint: #9a958a;
+        --rule: #d9d5ca;
+        --seal: #b23a2e;
+        --pad: clamp(1.5rem, 7vw, 8rem);
+        --col: 720px;
+        --kai: "LXGW WenKai", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
+        --latin: "Newsreader Variable", "LXGW WenKai", Georgia, serif;
+      }
+      html[data-theme="dark"] {
+        --paper: #171614;
+        --ink: #efece4;
+        --soft: #9a958a;
+        --faint: #6f6b63;
+        --rule: #37342d;
+        --seal: #c0473a;
+      }
+      * { box-sizing: border-box; }
+      html { background: var(--paper); color-scheme: light; }
+      html[data-theme="dark"] { color-scheme: dark; }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--kai);
+        font-size: 16px;
+        line-height: 1.9;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        transition: background-color 200ms ease, color 200ms ease;
+      }
+      a { color: inherit; text-decoration: none; }
+      ::selection { background: var(--seal); color: var(--paper); }
+      :focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
+
+      /* ── nav ───────────────────────────────────────── */
+      .nav {
+        position: fixed; inset: 0 0 auto 0; z-index: 20;
+        display: flex; align-items: center; gap: 1.5rem;
+        padding: 1.15rem var(--pad);
+        mix-blend-mode: normal;
+      }
+      .nav .brand { font-size: 0.95rem; letter-spacing: 0.04em; }
+      .nav .brand .lat { font-family: var(--latin); color: var(--faint); margin-left: 0.5rem; font-size: 0.9rem; }
+      .nav .links { margin-left: auto; display: flex; align-items: center; gap: clamp(0.9rem, 2.5vw, 1.8rem); font-size: 0.92rem; color: var(--soft); }
+      .nav .links a { transition: color 150ms ease; }
+      .nav .links a:hover { color: var(--ink); }
+      .theme-toggle {
+        width: 2.25rem; height: 2.25rem; display: inline-flex; align-items: center; justify-content: center;
+        font-family: var(--kai); font-size: 0.95rem; line-height: 1; color: var(--soft);
+        background: transparent; border: 1px solid var(--rule); border-radius: 0.3rem; cursor: pointer;
+        transition: color 160ms ease, border-color 160ms ease;
+      }
+      .theme-toggle:hover { color: var(--ink); border-color: var(--ink); }
+
+      /* ── cover (落款) ──────────────────────────────── */
+      .cover { min-height: 78dvh; display: flex; flex-direction: column; justify-content: flex-end; padding: 7rem var(--pad) clamp(2.5rem, 6vh, 4rem); }
+      .cover-inner { max-width: 60rem; }
+      h1.name { display: flex; align-items: flex-end; gap: 0.16em; margin: 0; font-weight: 400; font-size: clamp(3.25rem, 11vw, 7.5rem); line-height: 0.98; letter-spacing: 0.04em; }
+      .seal { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 1.1em; height: 1.1em; font-size: 0.3em; line-height: 1; letter-spacing: normal; color: var(--paper); background: var(--seal); border-radius: 0.13em; }
+      .seal span { display: block; transform: translate(0.02em, -0.007em); }
+      .pinyin { font-family: var(--latin); font-size: clamp(1rem, 2.2vw, 1.25rem); letter-spacing: 0.14em; color: var(--soft); margin: 0.9rem 0 0; }
+      .where { font-size: 0.95rem; letter-spacing: 0.18em; color: var(--soft); margin: 0.4rem 0 0; }
+      .position { font-size: clamp(1.05rem, 1.5vw, 1.2rem); margin: clamp(1.8rem, 4vw, 2.75rem) 0 0; max-width: 26em; }
+      .scroll { margin-top: clamp(2.5rem, 7vh, 4.5rem); font-size: 0.85rem; letter-spacing: 0.2em; color: var(--faint); }
+
+      /* ── sections ──────────────────────────────────── */
+      .section { padding: 0 var(--pad) clamp(3.5rem, 9vh, 6rem); max-width: calc(var(--col) + 2 * var(--pad)); }
+      .section-head { display: flex; align-items: baseline; gap: 1rem; border-top: 1px solid var(--rule); padding-top: 1rem; margin-bottom: 1.6rem; }
+      .section-head h2 { margin: 0; font-size: 1.05rem; font-weight: 400; letter-spacing: 0.08em; }
+      .section-head .more { margin-left: auto; font-family: var(--latin); font-size: 0.92rem; color: var(--soft); border-bottom: 1px solid var(--rule); padding-bottom: 2px; transition: border-color 150ms ease, color 150ms ease; }
+      .section-head .more:hover { color: var(--ink); border-color: var(--ink); }
+
+      .now p { margin: 0; max-width: 34em; }
+      .now .stamp { display: block; margin-top: 0.5rem; font-family: var(--latin); font-size: 0.85rem; color: var(--faint); letter-spacing: 0.05em; }
+
+      ul.ledger { list-style: none; margin: 0; padding: 0; }
+      ul.ledger > li { border-top: 1px solid var(--rule); padding: 1.15rem 0 1.25rem; }
+      ul.ledger > li:first-child { border-top: 0; padding-top: 0; }
+      .row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.35rem 2rem; align-items: baseline; }
+      .row h3 { margin: 0; font-size: 1.12rem; font-weight: 400; letter-spacing: 0.02em; }
+      .row h3 a { border-bottom: 1px solid transparent; transition: border-color 150ms ease; }
+      .row h3 a:hover { border-color: var(--ink); }
+      .row .desc { grid-column: 1; margin: 0.15rem 0 0; color: var(--soft); font-size: 0.94rem; line-height: 1.7; }
+      .row .meta { grid-column: 2; grid-row: 1 / span 2; text-align: right; display: flex; flex-direction: column; gap: 0.15rem; font-family: var(--latin); font-size: 0.86rem; color: var(--faint); white-space: nowrap; }
+      .row .meta .status { font-family: var(--kai); letter-spacing: 0.1em; }
+      .row .meta .status.active { color: var(--ink); }
+      .row .meta .status.wip { color: var(--seal); }
+
+      .writing .row .meta { color: var(--faint); }
+      .writing .row .desc { font-size: 0.9rem; }
+
+      .timeline { list-style: none; margin: 0; padding: 0; }
+      .timeline li { display: grid; grid-template-columns: 9.5rem 1fr; gap: 1.5rem; padding: 0.85rem 0; border-top: 1px solid var(--rule); }
+      .timeline li:first-child { border-top: 0; }
+      .timeline .years { font-family: var(--latin); color: var(--soft); font-size: 0.95rem; letter-spacing: 0.03em; }
+      .timeline .org { color: var(--ink); }
+
+      .contact { display: flex; flex-wrap: wrap; gap: 0.6rem 1.75rem; font-size: 0.95rem; }
+      .contact a { border-bottom: 1px solid var(--rule); padding-bottom: 2px; transition: border-color 150ms ease; }
+      .contact a:hover { border-color: var(--ink); }
+      .contact .lat { font-family: var(--latin); }
+
+      footer.colophon { padding: 2rem var(--pad) 4rem; border-top: 1px solid var(--rule); margin: 0 var(--pad); color: var(--faint); font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+
+      .badge { position: fixed; left: 0.9rem; bottom: 0.9rem; z-index: 30; font-family: var(--latin), sans-serif; font-size: 0.72rem; letter-spacing: 0.06em; color: var(--soft); background: color-mix(in srgb, var(--paper) 82%, transparent); border: 1px solid var(--rule); border-radius: 999px; padding: 0.2rem 0.7rem; backdrop-filter: blur(6px); }
+
+      @media (max-width: 620px) {
+        .nav .links { gap: 0.85rem; font-size: 0.82rem; }
+        .nav .brand .lat { display: none; }
+        .cover { min-height: 72dvh; }
+        .row { grid-template-columns: 1fr; }
+        .row .meta { grid-column: 1; grid-row: auto; flex-direction: row; gap: 0.9rem; text-align: left; margin-top: 0.35rem; }
+        .timeline li { grid-template-columns: 1fr; gap: 0.1rem; }
+      }
+      @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <span class="brand">胡志刚<span class="lat">Hu Zhigang</span></span>
+      <nav class="links">
+        <a href="#projects">项目</a>
+        <a href="#writing">写作</a>
+        <a href="#about">关于</a>
+        <a href="#contact">联系</a>
+        <button class="theme-toggle" type="button" aria-label="切换到深色模式">暗</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="cover">
+        <div class="cover-inner">
+          <h1 class="name">胡志刚<span class="seal" aria-hidden="true"><span>胡</span></span></h1>
+          <p class="pinyin">Hu Zhigang</p>
+          <p class="where">河南</p>
+          <p class="position">写代码，做工具，偶尔写点东西。</p>
+          <p class="scroll">向下</p>
+        </div>
+      </section>
+
+      <section class="section now">
+        <div class="section-head"><h2>现在</h2></div>
+        <p>正在构建 ArkDesk 与 PocketArk，把零散的工具整理成一套个人工具链。</p>
+        <span class="stamp">更新于 2026-09</span>
+      </section>
+
+      <section class="section" id="projects">
+        <div class="section-head"><h2>项目</h2><a class="more" href="https://github.com/hmilyld">全部仓库</a></div>
+        <ul class="ledger">
+          <li class="row">
+            <h3><a href="https://fullstack.hmilyld.com">fullstack-starter</a></h3>
+            <p class="desc">常规前后端基础框架，支持 Vue / React × Java / Python 四种组合。</p>
+            <div class="meta"><span class="status active">活跃</span><span>TypeScript</span><span>fullstack.hmilyld.com</span></div>
+          </li>
+          <li class="row">
+            <h3><a href="https://zchat.cc">zerochat</a></h3>
+            <p class="desc">端到端加密、阅后即焚的通讯，加密全部在浏览器端完成，服务器零信任。</p>
+            <div class="meta"><span class="status active">活跃</span><span>TypeScript</span><span>zchat.cc</span></div>
+          </li>
+          <li class="row">
+            <h3><a href="https://dotnet.hmilyld.com">ProjectEnc</a></h3>
+            <p class="desc">用来合并、加密以及打包 C# 程序的工具集，三合一，省掉一堆手工步骤。</p>
+            <div class="meta"><span class="status">维护</span><span>Inno Setup</span><span>dotnet.hmilyld.com</span></div>
+          </li>
+          <li class="row">
+            <h3><a href="https://pocketark.hmilyld.com">PocketArk</a></h3>
+            <p class="desc">基于 Tauri 的桌面端基础架构，带生命周期钩子与插件目录规范。</p>
+            <div class="meta"><span class="status wip">开发中</span><span>Vue</span><span>pocketark.hmilyld.com</span></div>
+          </li>
+          <li class="row">
+            <h3><a href="https://github.com/hmilyld/weekly-report">weekly-report</a></h3>
+            <p class="desc">日报自动生成周报，把每天零散记录收成一份能交出去的东西。</p>
+            <div class="meta"><span class="status">维护</span><span>JavaScript</span><span>GitHub</span></div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section writing" id="writing">
+        <div class="section-head"><h2>写作</h2><a class="more" href="https://hmilyld.com">hmilyld.com</a></div>
+        <ul class="ledger">
+          <li class="row">
+            <h3><a href="https://hmilyld.com/posts/blog-migration-typecho-to-astro">从 Typecho 迁移到 Astro 的记录</a></h3>
+            <p class="desc">为什么换、怎么迁、踩了哪些坑。</p>
+            <div class="meta"><span>2026-09</span></div>
+          </li>
+          <li class="row">
+            <h3><a href="https://hmilyld.com">用 AI 辅助生成软著材料</a></h3>
+            <p class="desc">流程、提示词与人工校验的边界。</p>
+            <div class="meta"><span>2026-08</span></div>
+          </li>
+          <li class="row">
+            <h3><a href="https://hmilyld.com/posts/pocketark-desktop-app-framework">PocketArk：一个桌面应用基础框架</a></h3>
+            <p class="desc">从零搭一套能复用的桌面端骨架。</p>
+            <div class="meta"><span>2026-07</span></div>
+          </li>
+          <li class="row">
+            <h3><a href="https://hmilyld.com/posts/docker-tomcat-mysql-nginx">Debian + Docker 部署笔记</a></h3>
+            <p class="desc">服务器、Nginx、证书与备份。</p>
+            <div class="meta"><span>2026-06</span></div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section" id="about">
+        <div class="section-head"><h2>关于</h2></div>
+        <ul class="timeline">
+          <li><span class="years">2008 — 2011</span><span class="org">河南电力试验研究院</span></li>
+          <li><span class="years">2011 — 2014</span><span class="org">西安格蒂电力有限公司</span></li>
+          <li><span class="years">2014 — 至今</span><span class="org">河南吉吉信息技术有限公司</span></li>
+        </ul>
+        <p style="margin-top:1.5rem;color:var(--soft);max-width:36em">
+          日常用 Java / Python / Vue / TypeScript，服务器是 Debian / Docker / Nginx。
+          这个域名是我的身份层，写东西在 hmilyld.com。
+        </p>
+      </section>
+
+      <section class="section" id="contact">
+        <div class="section-head"><h2>联系</h2></div>
+        <div class="contact">
+          <a href="mailto:Hmilyld@gmail.com"><span class="lat">Hmilyld@gmail.com</span></a>
+          <a href="https://github.com/hmilyld"><span class="lat">github.com/hmilyld</span></a>
+          <a href="https://hmilyld.com"><span class="lat">hmilyld.com</span></a>
+          <a href="https://hmilyld.com/rss.xml">RSS</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <span>本站用 Astro 构建</span>
+      <span>© 2026 胡志刚</span>
+    </footer>
+
+    <div class="badge">风格 1 / 4 · 落款</div>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var saved = null;
+        try { saved = localStorage.getItem('demo-theme'); } catch (e) {}
+        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.setAttribute('data-theme', dark ? 'dark' : 'light');
+        function sync() {
+          var b = document.querySelector('.theme-toggle');
+          if (!b) return;
+          var d = root.getAttribute('data-theme') === 'dark';
+          b.textContent = d ? '明' : '暗';
+          b.setAttribute('aria-label', d ? '切换到浅色模式' : '切换到深色模式');
+        }
+        document.addEventListener('click', function (e) {
+          if (!e.target.closest('.theme-toggle')) return;
+          var d = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', d);
+          try { localStorage.setItem('demo-theme', d); } catch (err) {}
+          sync();
+        });
+        sync();
+      })();
+    </script>
+  </body>
+</html>
