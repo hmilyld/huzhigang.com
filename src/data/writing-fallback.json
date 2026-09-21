@@ -1,0 +1,86 @@
+[
+  {
+    "title": "PocketArk：一个让我终于不用重复造轮子的桌面应用框架",
+    "link": "https://hmilyld.com/posts/pocketark-desktop-app-framework/",
+    "date": "2026-09",
+    "datetime": "2026-09-12",
+    "category": "技术"
+  },
+  {
+    "title": "软件著作权全自动处理提示词",
+    "link": "https://hmilyld.com/posts/software-copyright-prompt/",
+    "date": "2026-05",
+    "datetime": "2026-05-31",
+    "category": "技术"
+  },
+  {
+    "title": "博客换新：从 Typecho 到 Astro",
+    "link": "https://hmilyld.com/posts/blog-migration-typecho-to-astro/",
+    "date": "2026-05",
+    "datetime": "2026-05-30",
+    "category": "技术"
+  },
+  {
+    "title": "男人",
+    "link": "https://hmilyld.com/posts/men/",
+    "date": "2024-11",
+    "datetime": "2024-11-05",
+    "category": "生活"
+  },
+  {
+    "title": "Inno Setup判断是否安装net framework4.8、webview2以及vc++",
+    "link": "https://hmilyld.com/posts/inno-setup-dependency-check/",
+    "date": "2024-10",
+    "datetime": "2024-10-28",
+    "category": "CSharp"
+  },
+  {
+    "title": "C#程序合并、加密及打包专用工具",
+    "link": "https://hmilyld.com/posts/csharp-packaging-tool/",
+    "date": "2024-10",
+    "datetime": "2024-10-16",
+    "category": "软件"
+  },
+  {
+    "title": "Windows7下安装Edge WebView2",
+    "link": "https://hmilyld.com/posts/install-edge-webview2-win7/",
+    "date": "2024-06",
+    "datetime": "2024-06-27",
+    "category": "CSharp"
+  },
+  {
+    "title": "Windows7下安装Net Framework证书链报错的问题",
+    "link": "https://hmilyld.com/posts/net-framework-cert-error-win7/",
+    "date": "2024-06",
+    "datetime": "2024-06-27",
+    "category": "CSharp"
+  },
+  {
+    "title": "人生在世",
+    "link": "https://hmilyld.com/posts/life-in-this-world/",
+    "date": "2024-04",
+    "datetime": "2024-04-23",
+    "category": "生活"
+  },
+  {
+    "title": "为什么年龄越大越沉默？",
+    "link": "https://hmilyld.com/posts/why-silence-with-age/",
+    "date": "2024-02",
+    "datetime": "2024-02-23",
+    "category": "随笔"
+  },
+  {
+    "title": "轻舟已过万重山",
+    "link": "https://hmilyld.com/posts/light-boat-passes-mountains/",
+    "date": "2023-12",
+    "datetime": "2023-12-01",
+    "category": "心情"
+  },
+  {
+    "title": "后续问题处理",
+    "link": "https://hmilyld.com/posts/follow-up-issues/",
+    "date": "2023-09",
+    "datetime": "2023-09-12",
+    "category": "婚姻"
+  }
+]

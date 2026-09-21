@@ -1,49 +1,109 @@
 ---
 import Base from '../layouts/Base.astro';
-import Seal from '../components/Seal.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
+import SiteRail from '../components/SiteRail.astro';
+import { projects, roles, stack } from '../data/projects';
+import { getWriting } from '../data/writing';
 
-const name = '胡志刚';
-const pinyin = 'Hu Zhigang';
-const places = '河南 周口 沈丘';
-// TODO: replace with the real one-line self-description.
-const intro = '写点东西，也做点东西。';
+const writing = await getWriting();
 ---
 
 <Base>
-  <main
-    class="flex min-h-dvh flex-col justify-end px-[clamp(1.5rem,7vw,8rem)] pb-[clamp(1.75rem,5vh,3.5rem)] pt-24"
-  >
-    <div class="fixed right-[clamp(1.5rem,7vw,8rem)] top-[clamp(1.5rem,5vh,2.75rem)] z-10">
-      <ThemeToggle />
-    </div>
+  <div class="shell">
+    <SiteRail />
 
-    <div class="flex flex-col">
-      <h1
-        class="reveal flex items-end gap-[0.16em] text-name leading-[0.98] tracking-[0.04em]"
-      >
-        <span>{name}</span>
-        <Seal />
-      </h1>
+    <main class="pane" id="main" tabindex="-1">
+      <div class="pane-inner">
+        <section class="sect" id="projects">
+          <div class="sect-head">
+            <h2>项目</h2><span class="en">Projects</span>
+            <a class="more lat" href="https://github.com/hmilyld">全部仓库</a>
+          </div>
 
-      <div class="reveal reveal-late mt-[clamp(0.9rem,2vw,1.4rem)] flex flex-col gap-[0.4rem]">
-        <p class="font-newsreader text-pinyin tracking-[0.14em] text-ink-soft">{pinyin}</p>
-        <p class="text-[0.95rem] tracking-[0.18em] text-ink-soft">{places}</p>
+          <ul class="rows">
+            {projects.map((project) => (
+              <li class="row">
+                <div class="row-main">
+                  <h3 class="lat"><a href={project.url}>{project.name}</a></h3>
+                  <p>{project.description}</p>
+                </div>
+                <div class="row-meta">
+                  <span class="zh is-active">{project.status}</span>
+                  <span>{project.tech}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="sect" id="writing">
+          <div class="sect-head">
+            <h2>写作</h2><span class="en">Writing</span>
+            <a class="more lat" href="https://hmilyld.com">hmilyld.com</a>
+          </div>
+
+          <ul class="rows">
+            {writing.posts.map((post) => (
+              <li class="row">
+                <div class="row-main">
+                  <h3><a href={post.link}>{post.title}</a></h3>
+                </div>
+                <div class="row-meta">
+                  {post.category && <span class="zh">{post.category}</span>}
+                  <time datetime={post.datetime}>{post.date}</time>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="sect" id="about">
+          <div class="sect-head">
+            <h2>关于</h2><span class="en">Profile</span>
+            <a class="more lat" href="https://hmilyld.com/about">博客里的我</a>
+          </div>
+
+          <ul class="rows">
+            {roles.map((role) => (
+              <li class="row">
+                <div class="row-main">
+                  <h3>{role.org}</h3>
+                </div>
+                <div class="row-meta">
+                  <span>{role.years}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <div class="stack">
+            {stack.map((item) => (
+              <span>{item}</span>
+            ))}
+          </div>
+        </section>
+
+        <section class="sect" id="contact">
+          <div class="sect-head">
+            <h2>联系</h2><span class="en">Contact</span>
+          </div>
+
+          <p class="lead">
+            这个域名是身份层，写东西在 hmilyld.com。合作或闲聊都可以写信。
+          </p>
+
+          <div class="contact-links">
+            <a href="mailto:Hmilyld@gmail.com">Hmilyld@gmail.com</a>
+            <a href="https://github.com/hmilyld" rel="me">github.com/hmilyld</a>
+            <a href="https://hmilyld.com" rel="me">hmilyld.com</a>
+            <a href="https://hmilyld.com/rss.xml">RSS</a>
+          </div>
+        </section>
+
+        <footer class="colophon">
+          本站用 Astro 构建，部署在 Debian + Docker + Nginx。
+          <span class="d">© 2026 胡志刚</span>
+        </footer>
       </div>
-
-      <p class="reveal reveal-later mt-[clamp(1.75rem,4vw,2.75rem)] max-w-[26em] text-line leading-[1.9]">
-        {intro}
-      </p>
-    </div>
-
-    <footer class="mt-[clamp(3rem,9vh,6rem)] border-t border-rule pt-4">
-      <a
-        class="link font-newsreader text-[0.95rem] tracking-[0.02em]"
-        href="https://hmilyld.com"
-        rel="me"
-      >
-        写作在 hmilyld.com
-      </a>
-    </footer>
-  </main>
+    </main>
+  </div>
 </Base>

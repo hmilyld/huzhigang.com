@@ -1,6 +1,6 @@
 ---
-import '@fontsource-variable/newsreader/wght.css';
-import 'lxgw-wenkai-webfont/lxgwwenkai-regular.css';
+import '@fontsource-variable/overpass/wght.css';
+import '@fontsource-variable/noto-sans-sc/wght.css';
 import '../styles/global.css';
 
 interface Props {
@@ -11,25 +11,45 @@ interface Props {
 
 const {
   title = '胡志刚 · Hu Zhigang',
-  description = '胡志刚（河南周口沈丘）的个人主页，写作在 hmilyld.com。',
-  keywords = '胡志刚, 河南胡志刚, 郑州胡志刚, 周口胡志刚, 沈丘胡志刚, Hu Zhigang',
+  description = '胡志刚（河南周口沈丘）的个人主页：开源项目、工具与写作。写东西在 hmilyld.com。',
+  keywords = '胡志刚, 河南胡志刚, 郑州胡志刚, 周口胡志刚, 沈丘胡志刚, Hu Zhigang, Hmilyld',
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://huzhigang.com');
+const ogImage = new URL('/og.png', canonical).href;
 
 const person = {
-  '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': `${canonical.origin}/#person`,
   name: '胡志刚',
-  alternateName: 'Hu Zhigang',
+  alternateName: ['Hu Zhigang', 'Hmilyld'],
   url: canonical.href,
-  sameAs: ['https://hmilyld.com'],
+  image: ogImage,
+  sameAs: ['https://hmilyld.com', 'https://github.com/hmilyld'],
+  jobTitle: '全栈开发',
+  knowsLanguage: ['zh-CN'],
   address: {
     '@type': 'PostalAddress',
     addressCountry: 'CN',
     addressRegion: '河南省',
     addressLocality: '周口市沈丘县',
   },
+};
+
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    person,
+    {
+      '@type': 'WebSite',
+      '@id': `${canonical.origin}/#website`,
+      url: `${canonical.origin}/`,
+      name: title,
+      description,
+      inLanguage: 'zh-CN',
+      publisher: { '@id': person['@id'] },
+    },
+  ],
 };
 ---
 
@@ -43,31 +63,94 @@ const person = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#faf8f3" />
+    <meta name="theme-color" content="#eeede9" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="小胡日记 · hmilyld.com"
+      href="https://hmilyld.com/rss.xml"
+    />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="胡志刚 · Hu Zhigang" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="zh_CN" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="胡志刚 · Hu Zhigang — 写代码，做工具，偶尔写点东西。" />
+    <meta property="profile:first_name" content="志刚" />
+    <meta property="profile:last_name" content="胡" />
 
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(person)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
 
-    {/* 绘制前定好明暗，避免闪白。 */}
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(graph)} />
+
+    {/* 绘制前定好明暗：有记录用记录，没有就跟随系统。 */}
     <script is:inline>
       (() => {
         try {
           const stored = localStorage.getItem('theme');
-          const dark = stored
-            ? stored === 'dark'
-            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const dark =
+            stored === 'dark' ||
+            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
           document.documentElement.classList.toggle('dark', dark);
         } catch {}
       })();
     </script>
   </head>
   <body>
+    <a class="skip" href="#main">跳到主要内容</a>
     <slot />
+
+    <script>
+      const root = document.documentElement;
+      const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+      const choices = document.querySelectorAll<HTMLButtonElement>('.theme [data-theme-value]');
+      const system = window.matchMedia('(prefers-color-scheme: dark)');
+
+      function storedMode(): 'system' | 'light' | 'dark' {
+        try {
+          const value = localStorage.getItem('theme');
+          return value === 'light' || value === 'dark' ? value : 'system';
+        } catch {
+          return 'system';
+        }
+      }
+
+      function applyTheme() {
+        const mode = storedMode();
+        const dark = mode === 'dark' || (mode === 'system' && system.matches);
+
+        root.classList.toggle('dark', dark);
+        choices.forEach((choice) => {
+          choice.setAttribute('aria-pressed', String(choice.dataset.themeValue === mode));
+        });
+        themeColor?.setAttribute('content', dark ? '#1a1c1e' : '#eeede9');
+      }
+
+      choices.forEach((choice) => {
+        choice.addEventListener('click', () => {
+          try {
+            localStorage.setItem('theme', choice.dataset.themeValue ?? 'system');
+          } catch {}
+          applyTheme();
+        });
+      });
+
+      // While on 自动, follow the system as it changes during the visit.
+      system.addEventListener('change', () => {
+        if (storedMode() === 'system') applyTheme();
+      });
+
+      applyTheme();
+    </script>
   </body>
 </html>

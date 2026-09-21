@@ -1,174 +1,649 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+:root {
+  /* 钢板 · 铁黑 · 朱红 */
+  --color-ground: #eeede9;
+  --color-surface: #f7f6f3;
+  --color-ink: #26282b;
+  --color-soft: #55595d; /* 6.0:1 on ground */
+  --color-faint: #676b6f; /* 4.6:1 on ground */
+  --color-rule: #d4d6d2;
+  --color-rule-strong: #b9bcb6;
+  --color-seal: #b23a2e; /* the printed block */
+  --color-accent: #b23a2e; /* accent where it carries text (5.1:1) */
 
-@theme {
-  /* 纸 · 墨 · 印 */
-  --color-paper: #faf8f3;
-  --color-ink: #1a1917;
-  --color-ink-soft: #6e6b63;
-  --color-rule: #d9d5ca;
-  --color-seal: #b23a2e;
-  --color-seal-deep: #8e2c22;
+  --font-lat: "Overpass Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-han: "Noto Sans SC Variable", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    system-ui, sans-serif;
 
-  /* 霞鹜文楷 for Chinese, Newsreader for Latin */
-  --font-kai: "LXGW WenKai", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
-  --font-newsreader: "Newsreader Variable", "LXGW WenKai", "PingFang SC", Georgia, serif;
+  --rail-w: 320px;
+  --shell-max: 1320px;
+  --gutter: 3.5rem;
+}
 
-  --text-name: clamp(3.25rem, 11vw, 7.5rem);
-  --text-pinyin: clamp(1rem, 2.2vw, 1.25rem);
-  --text-line: clamp(1.0625rem, 1.4vw, 1.1875rem);
+.dark {
+  --color-ground: #1a1c1e;
+  --color-surface: #202225;
+  --color-ink: #e7e8e5;
+  --color-soft: #9aa0a4; /* 6.5:1 */
+  --color-faint: #8a9095; /* 5.3:1 */
+  --color-rule: #303336;
+  --color-rule-strong: #41454a;
+  --color-seal: #c0473a;
+  --color-accent: #e07a6a; /* 5.8:1 — the darker seal would fail on ink */
 }
 
 @layer base {
   html {
     color-scheme: light;
-    background-color: var(--color-paper);
+    background-color: var(--color-ground);
+    scroll-behavior: smooth;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body {
-    background-color: var(--color-paper);
+    margin: 0;
+    background-color: var(--color-ground);
     color: var(--color-ink);
-    font-family: var(--font-kai);
-    font-synthesis-weight: none;
+    font-family: var(--font-han);
+    font-size: 15px;
+    line-height: 1.75;
+    font-variant-numeric: tabular-nums;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 200ms ease, color 200ms ease;
   }
 
   ::selection {
-    background-color: var(--color-seal);
-    color: var(--color-paper);
+    background-color: var(--color-accent);
+    color: var(--color-ground);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-ink);
-    outline-offset: 4px;
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
     border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 600;
+    line-height: 1.4;
   }
 }
 
 @layer components {
-  /* 印章 — the one red mark. Sized off the name it sits beside. */
+  .lat {
+    font-family: var(--font-lat);
+  }
+
+  /* ── shell: rail + content, capped and centred ───── */
+  .shell {
+    max-width: var(--shell-max);
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: var(--rail-w) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  /* ── rail ────────────────────────────────────────── */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 2.25rem 1.9rem 1.75rem;
+    border-right: 1px solid var(--color-rule);
+  }
+
+  .rail-mark {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
   .seal {
     display: inline-flex;
     flex: none;
     align-items: center;
     justify-content: center;
+    /* 1.1em gives the glyph room; the 0.847em ink then sits ~5px inside */
     width: 1.1em;
     height: 1.1em;
-    font-size: 0.3em;
+    font-size: 2.5rem;
     line-height: 1;
     letter-spacing: normal;
-    color: var(--color-paper);
+    color: var(--color-ground);
     background-color: var(--color-seal);
     border-radius: 0.13em;
-    animation: seal-press 520ms cubic-bezier(0.2, 0.9, 0.25, 1) 520ms both;
   }
 
-  /* Optical centring: 胡's ink is right-heavy, so it sits a touch left. */
-  .seal__char {
+  .seal > span {
     display: block;
-    transform: translate(0.02em, -0.007em);
+    /* optical centring measured for Noto Sans SC's 胡 (ink sits low + a hair right) */
+    transform: translate(0.014em, -0.032em);
   }
 
-  .link {
-    color: inherit;
+  .rail-who h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1.15;
+  }
+
+  .bar-name {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1.15;
+  }
+
+  .rail-who .lat-sub {
+    display: block;
+    font-family: var(--font-lat);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.26em;
+    color: var(--color-faint);
+    margin-top: 0.2rem;
+  }
+
+  .rail-pos {
+    margin: 1.4rem 0 0;
+    color: var(--color-soft);
+    font-size: 0.92rem;
+    max-width: 18em;
+  }
+
+  .rail-now {
+    margin-top: 1.5rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .rail-now .k {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    color: var(--color-accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .rail-now p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--color-ink);
+    max-width: 20em;
+  }
+
+  .rail-now .d {
+    display: block;
+    margin-top: 0.4rem;
+    font-family: var(--font-lat);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--color-faint);
+  }
+
+  .rail-nav {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    border-top: 1px solid var(--color-rule);
+    padding-top: 1rem;
+  }
+
+  .rail-nav a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.3rem 0;
+    color: var(--color-soft);
+    text-decoration: none;
+    transition: color 140ms ease;
+  }
+
+  .rail-nav a .en {
+    font-family: var(--font-lat);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+    transition: color 140ms ease;
+  }
+
+  .rail-nav a:hover {
+    color: var(--color-ink);
+  }
+
+  .rail-nav a.is-active {
+    color: var(--color-accent);
+  }
+
+  .rail-nav a.is-active .en {
+    color: var(--color-accent);
+  }
+
+  .rail-foot {
+    margin-top: auto;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-rule);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .rail-foot .where {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--color-faint);
+  }
+
+  /* theme: 自动 / 浅色 / 深色 */
+  .theme {
+    display: inline-flex;
+    border: 1px solid var(--color-rule-strong);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .theme button {
+    appearance: none;
+    border: 0;
+    border-left: 1px solid var(--color-rule);
+    background: transparent;
+    color: var(--color-soft);
+    font-family: var(--font-han);
+    font-size: 0.7rem;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    padding: 0.32rem 0.55rem;
+    cursor: pointer;
+    transition: color 150ms ease, background-color 150ms ease;
+  }
+
+  .theme button:first-child {
+    border-left: 0;
+  }
+
+  .theme button:hover {
+    color: var(--color-ink);
+  }
+
+  .theme button[aria-pressed="true"] {
+    color: var(--color-ink);
+    background-color: color-mix(in srgb, var(--color-ink) 9%, transparent);
+  }
+
+  /* mobile bar + off-canvas drawer (shown under 861px) */
+  .mobilebar,
+  .backdrop {
+    display: none;
+  }
+
+  .pane {
+    padding: 3rem var(--gutter) 5rem;
+  }
+
+  .pane-inner {
+    max-width: 56rem;
+  }
+
+  .sect {
+    padding: 0 0 2.75rem;
+    scroll-margin-top: 1.5rem;
+  }
+
+  .sect-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    margin-bottom: 0.4rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 2px solid var(--color-ink);
+  }
+
+  .sect-head h2 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+  }
+
+  .sect-head .en {
+    font-family: var(--font-lat);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+  }
+
+  .sect-head .more {
+    margin-left: auto;
+    font-family: var(--font-lat);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--color-soft);
     text-decoration: none;
     border-bottom: 1px solid var(--color-rule);
     padding-bottom: 2px;
-    transition: border-color 200ms ease;
+    transition: color 150ms ease, border-color 150ms ease;
   }
 
-  .link:hover {
+  .sect-head .more:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  /* rows: body + a metadata gutter that stays aligned throughout */
+  .rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 12rem;
+    gap: 0.25rem 3rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .row:first-of-type {
+    border-top: 0;
+    padding-top: 0.9rem;
+  }
+
+  .row-main h3 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .row-main h3 a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 150ms ease;
+  }
+
+  .row-main h3 a:hover {
     border-color: var(--color-ink);
   }
 
-  /* One page-load sequence, not scattered section reveals. */
-  .reveal {
-    animation: ink-in 700ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  .row-main p {
+    margin: 0.3rem 0 0;
+    color: var(--color-soft);
+    font-size: 0.91rem;
+    max-width: 38em;
   }
 
-  .reveal-late {
-    animation-delay: 110ms;
+  .row-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.1rem;
+    text-align: right;
+    font-family: var(--font-lat);
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    color: var(--color-faint);
   }
 
-  .reveal-later {
-    animation-delay: 220ms;
+  .row-meta .zh {
+    font-family: var(--font-han);
+    letter-spacing: 0.08em;
   }
 
-  /* 明暗 — a small square of ink, quiet in the empty top of the card. */
-  .theme-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    font-size: 0.95rem;
-    line-height: 1;
-    color: var(--color-ink-soft);
-    background-color: transparent;
+  .row-meta .is-active {
+    color: var(--color-accent);
+  }
+
+  .lead {
+    margin: 0.7rem 0 0;
+    max-width: 36em;
+  }
+
+  .lead .d {
+    display: block;
+    margin-top: 0.35rem;
+    font-family: var(--font-lat);
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    color: var(--color-faint);
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.1rem;
+    font-family: var(--font-lat);
+    font-size: 0.72rem;
+    color: var(--color-soft);
+  }
+
+  .stack span {
     border: 1px solid var(--color-rule);
-    border-radius: 0.3rem;
-    cursor: pointer;
-    transition: color 160ms ease, border-color 160ms ease;
+    border-radius: 3px;
+    padding: 0.08rem 0.5rem;
   }
 
-  .theme-toggle:hover {
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+    margin-top: 0.9rem;
+    font-family: var(--font-lat);
+    font-size: 0.85rem;
+  }
+
+  .contact-links a {
+    color: var(--color-soft);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-rule);
+    padding-bottom: 2px;
+    transition: color 150ms ease, border-color 150ms ease;
+  }
+
+  .contact-links a:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .colophon {
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-rule);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    color: var(--color-soft);
+    font-size: 0.82rem;
+  }
+
+  .colophon .d {
+    font-family: var(--font-lat);
+    letter-spacing: 0.04em;
+    color: var(--color-faint);
+  }
+
+  .skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 50;
+    background: var(--color-ink);
+    color: var(--color-ground);
+    padding: 0.5rem 0.9rem;
+    border-radius: 0 0 4px 0;
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+
+  .skip:focus {
+    left: 0;
+  }
+}
+
+/* ── responsive ──────────────────────────────────── */
+@media (max-width: 1199px) {
+  :root {
+    --gutter: 2.75rem;
+  }
+
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+
+  .row-meta {
+    flex-direction: row;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+    text-align: left;
+  }
+
+  .pane-inner {
+    max-width: 46rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --rail-w: 272px;
+  }
+}
+
+@media (max-width: 860px) {
+  .shell {
+    display: block;
+  }
+
+  /* compact bar keeps the identity + a way into the drawer */
+  .mobilebar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 1.25rem;
+    background: color-mix(in srgb, var(--color-ground) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  .mobilebar .rail-mark {
+    gap: 0.6rem;
+  }
+
+  .mobilebar .seal {
+    font-size: 1.9rem;
+  }
+
+  .mobilebar .rail-who .bar-name {
+    font-size: 1.15rem;
+  }
+
+  .mobilebar .rail-who .lat-sub {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+  }
+
+  .menu-toggle {
+    font-family: var(--font-han);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--color-soft);
+    background: transparent;
+    border: 1px solid var(--color-rule-strong);
+    border-radius: 3px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    transition: color 150ms ease, border-color 150ms ease;
+  }
+
+  .menu-toggle:hover {
     color: var(--color-ink);
     border-color: var(--color-ink);
   }
 
-  .theme-toggle__dark {
-    display: none;
-  }
-}
-
-@keyframes ink-in {
-  from {
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 35;
+    background: color-mix(in srgb, #1a1c1e 45%, transparent);
     opacity: 0;
-    transform: translateY(0.5rem);
+    pointer-events: none;
+    transition: opacity 200ms ease;
   }
-  to {
+
+  .backdrop.is-open {
     opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* the rail becomes an off-canvas drawer */
+  .rail {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100dvh;
+    width: min(84vw, 300px);
+    z-index: 40;
+    overflow-y: auto;
+    background: var(--color-ground);
+    border-right: 1px solid var(--color-rule);
+    border-bottom: 0;
+    padding: 1.5rem 1.35rem 1.75rem;
+    transform: translateX(-100%);
+    transition: transform 220ms ease;
+  }
+
+  .rail.is-open {
     transform: none;
   }
-}
 
-@keyframes seal-press {
-  from {
-    opacity: 0;
-    transform: scale(1.16);
-    background-color: var(--color-seal-deep);
+  .rail-pos,
+  .rail-now p {
+    max-width: none;
   }
-  to {
-    opacity: 1;
-    transform: scale(1);
-    background-color: var(--color-seal);
+
+  body.has-drawer {
+    overflow: hidden;
+  }
+
+  .pane {
+    padding: 2rem 1.25rem 3.5rem;
+  }
+
+  .pane-inner {
+    max-width: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal,
-  .seal {
-    animation: none;
+  html {
+    scroll-behavior: auto;
   }
-}
 
-/* 墨底 — dark mode keeps the same materials, reversed. */
-.dark {
-  --color-paper: #171614;
-  --color-ink: #efece4;
-  --color-ink-soft: #9a958a;
-  --color-rule: #37342d;
-  --color-seal: #c0473a;
-  --color-seal-deep: #8e2c22;
-  color-scheme: dark;
-}
-
-.dark .theme-toggle__light {
-  display: none;
-}
-
-.dark .theme-toggle__dark {
-  display: inline;
+  * {
+    transition: none !important;
+  }
 }

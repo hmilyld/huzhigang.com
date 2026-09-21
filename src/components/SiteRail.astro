@@ -1,0 +1,164 @@
+---
+import Seal from './Seal.astro';
+
+const nav = [
+  { href: '#projects', zh: '项目', en: 'Projects' },
+  { href: '#writing', zh: '写作', en: 'Writing' },
+  { href: '#about', zh: '关于', en: 'Profile' },
+  { href: '#contact', zh: '联系', en: 'Contact' },
+];
+
+const themes = [
+  { value: 'system', label: '自动' },
+  { value: 'light', label: '浅色' },
+  { value: 'dark', label: '深色' },
+];
+---
+
+<header class="mobilebar">
+  <div class="rail-mark">
+    <Seal />
+    <div class="rail-who">
+      <span class="bar-name">胡志刚</span>
+      <span class="lat-sub">HU ZHIGANG</span>
+    </div>
+  </div>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-rail">目录</button>
+</header>
+
+<div class="backdrop" data-backdrop></div>
+
+<aside class="rail" id="site-rail">
+  <div class="rail-mark">
+    <Seal />
+    <div class="rail-who">
+      <h1>胡志刚</h1>
+      <span class="lat-sub">HU ZHIGANG</span>
+    </div>
+  </div>
+
+  <p class="rail-pos">写代码，做工具，偶尔写点东西。</p>
+
+  <div class="rail-now">
+    <span class="k">现在</span>
+    <p>正在构建 ArkDesk 与 PocketArk，把零散的工具整理成一套个人工具链。</p>
+    <span class="d">更新于 2026-09</span>
+  </div>
+
+  <nav class="rail-nav" aria-label="页面导航">
+    {nav.map((item) => (
+      <a href={item.href}>
+        {item.zh}<span class="en">{item.en}</span>
+      </a>
+    ))}
+  </nav>
+
+  <div class="rail-foot">
+    <span class="where">河南 · 周口 · 沈丘</span>
+    <div class="theme" role="group" aria-label="主题">
+      {themes.map((t) => (
+        <button type="button" data-theme-value={t.value} aria-pressed="false">{t.label}</button>
+      ))}
+    </div>
+  </div>
+</aside>
+
+<script>
+  // ── off-canvas drawer (mobile only) ──────────────────
+  const rail = document.getElementById('site-rail');
+  const menu = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const backdrop = document.querySelector<HTMLElement>('[data-backdrop]');
+
+  if (rail && menu && backdrop) {
+    const setOpen = (open: boolean) => {
+      rail.classList.toggle('is-open', open);
+      backdrop.classList.toggle('is-open', open);
+      menu.setAttribute('aria-expanded', String(open));
+      menu.textContent = open ? '关闭' : '目录';
+      document.body.classList.toggle('has-drawer', open);
+      if (open) {
+        rail.querySelector<HTMLAnchorElement>('.rail-nav a')?.focus();
+      } else if (window.getComputedStyle(menu).display !== 'none') {
+        menu.focus();
+      }
+    };
+
+    menu.addEventListener('click', () => setOpen(!rail.classList.contains('is-open')));
+    backdrop.addEventListener('click', () => setOpen(false));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && rail.classList.contains('is-open')) setOpen(false);
+    });
+    rail.querySelectorAll('.rail-nav a').forEach((link) => {
+      link.addEventListener('click', () => setOpen(false));
+    });
+  }
+
+  // ── scroll-spy: highlight the section being read ─────
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.rail-nav a')];
+  const targets = links
+    .map((link) => document.querySelector<HTMLElement>(link.getAttribute('href') ?? ''))
+    .filter((el): el is HTMLElement => Boolean(el));
+
+  if (targets.length > 0) {
+    const setActive = (id: string) => {
+      links.forEach((link) => link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`));
+    };
+
+    let clickLocked = false;
+    let queued = false;
+
+    const update = () => {
+      queued = false;
+      if (clickLocked) return;
+
+      // The last section can never reach the reading line on a short page,
+      // so take it explicitly once the page is scrolled to the end.
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      if (atBottom) {
+        setActive(targets[targets.length - 1].id);
+        return;
+      }
+
+      const line = window.innerHeight * 0.28;
+      let current = targets[0].id;
+      for (const target of targets) {
+        if (target.getBoundingClientRect().top <= line) current = target.id;
+      }
+      setActive(current);
+    };
+
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(update);
+    };
+
+    // A click knows the intent better than any position rule; hold it until the
+    // visitor actually scrolls again.
+    links.forEach((link) => {
+      link.addEventListener('click', () => {
+        const id = link.getAttribute('href')?.slice(1);
+        if (!id) return;
+        setActive(id);
+        clickLocked = true;
+      });
+    });
+
+    ['wheel', 'touchmove', 'keydown'].forEach((event) => {
+      window.addEventListener(
+        event,
+        () => {
+          if (!clickLocked) return;
+          clickLocked = false;
+          onScroll();
+        },
+        { passive: true }
+      );
+    });
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  }
+</script>
