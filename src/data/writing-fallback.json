@@ -1,5 +1,19 @@
 [
   {
+    "title": "SealPack：把合并、加密、打包串成一条流水线",
+    "link": "https://hmilyld.com/posts/sealpack/",
+    "date": "2026-10",
+    "datetime": "2026-10-13",
+    "category": "技术"
+  },
+  {
+    "title": "找回经典 Windows 照片查看器（Win10 / Win11 / LTSC 2024）",
+    "link": "https://hmilyld.com/posts/restore-windows-photo-viewer/",
+    "date": "2026-10",
+    "datetime": "2026-10-12",
+    "category": "Windows"
+  },
+  {
     "title": "PocketArk：一个让我终于不用重复造轮子的桌面应用框架",
     "link": "https://hmilyld.com/posts/pocketark-desktop-app-framework/",
     "date": "2026-09",
@@ -68,19 +82,5 @@
     "date": "2024-02",
     "datetime": "2024-02-23",
     "category": "随笔"
-  },
-  {
-    "title": "轻舟已过万重山",
-    "link": "https://hmilyld.com/posts/light-boat-passes-mountains/",
-    "date": "2023-12",
-    "datetime": "2023-12-01",
-    "category": "心情"
-  },
-  {
-    "title": "后续问题处理",
-    "link": "https://hmilyld.com/posts/follow-up-issues/",
-    "date": "2023-09",
-    "datetime": "2023-09-12",
-    "category": "婚姻"
   }
 ]

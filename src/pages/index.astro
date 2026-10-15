@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import SiteRail from '../components/SiteRail.astro';
 import { projects, roles, stack } from '../data/projects';
-import { getWriting } from '../data/writing';
+import { getWriting, FEED, LIMIT } from '../data/writing';
 
 const writing = await getWriting();
 ---
@@ -41,7 +41,7 @@ const writing = await getWriting();
             <a class="more lat" href="https://hmilyld.com">hmilyld.com</a>
           </div>
 
-          <ul class="rows">
+          <ul class="rows" id="writing-list" data-feed={FEED} data-limit={LIMIT}>
             {writing.posts.map((post) => (
               <li class="row">
                 <div class="row-main">
@@ -106,4 +106,79 @@ const writing = await getWriting();
       </div>
     </main>
   </div>
+
+  <script>
+    import { parseRssItems } from '../lib/rss.js';
+
+    interface Post {
+      title: string;
+      link: string;
+      date: string;
+      datetime: string;
+      category: string;
+    }
+
+    // The 写作 list is rendered at build time; refresh it from the live feed on
+    // each visit so new posts show up without a rebuild. If the blog is
+    // unreachable the build-time snapshot stays in place.
+    const list = document.getElementById('writing-list');
+    const feed = list?.dataset.feed;
+    const limit = Number(list?.dataset.limit ?? 5);
+
+    if (list && feed) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+
+      try {
+        const response = await fetch(feed, { signal: controller.signal, redirect: 'follow' });
+
+        if (response.ok) {
+          const posts = parseRssItems(await response.text(), limit) as Post[];
+          const current = list.querySelector('a')?.getAttribute('href');
+
+          // Only touch the DOM when the feed actually has newer content.
+          if (posts.length > 0 && posts[0].link !== current) {
+            list.replaceChildren(...posts.map(renderRow));
+          }
+        }
+      } catch {
+        // Keep what was rendered at build time.
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function renderRow(post: Post): HTMLLIElement {
+      const row = document.createElement('li');
+      row.className = 'row';
+
+      const main = document.createElement('div');
+      main.className = 'row-main';
+
+      const heading = document.createElement('h3');
+      const link = document.createElement('a');
+      link.href = post.link;
+      link.textContent = post.title;
+      heading.append(link);
+      main.append(heading);
+
+      const meta = document.createElement('div');
+      meta.className = 'row-meta';
+
+      if (post.category) {
+        const category = document.createElement('span');
+        category.className = 'zh';
+        category.textContent = post.category;
+        meta.append(category);
+      }
+
+      const time = document.createElement('time');
+      time.dateTime = post.datetime;
+      time.textContent = post.date;
+      meta.append(time);
+
+      row.append(main, meta);
+      return row;
+    }
+  </script>
 </Base>

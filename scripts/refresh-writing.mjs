@@ -2,7 +2,7 @@
 /**
  * Refresh src/data/writing-fallback.json from the blog feed.
  *
- *   pnpm writing:refresh                      fetch https://hmilyld.com/rss.xml
+ *   pnpm writing:refresh                      fetch https://www.hmilyld.com/rss.xml
  *   pnpm writing:refresh --from feed.xml      use a local copy instead
  *
  * The site reads this snapshot only when the build-time fetch fails.
@@ -11,7 +11,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { parseRssItems } from '../src/lib/rss.js';
 
-const FEED = 'https://hmilyld.com/rss.xml';
+const FEED = 'https://www.hmilyld.com/rss.xml';
 const LIMIT = 12;
 const OUT = fileURLToPath(new URL('../src/data/writing-fallback.json', import.meta.url));
 

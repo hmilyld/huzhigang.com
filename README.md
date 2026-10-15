@@ -21,7 +21,7 @@ Static output, no client framework.
 │   │   └── SiteRail.astro       # identity rail + scroll-spy nav
 │   ├── data/
 │   │   ├── projects.ts          # hand-picked projects, roles, tech stack
-│   │   ├── writing.ts           # build-time RSS fetch with snapshot fallback
+│   │   ├── writing.ts           # build-time RSS fetch + client refresh source of truth
 │   │   └── writing-fallback.json
 │   ├── layouts/
 │   │   └── Base.astro           # html shell, fonts, SEO, theme init
@@ -52,9 +52,11 @@ Static output, no client framework.
 - **Colour** — steel `#eeede9` and ink `#26282b`, with 朱红 `#b23a2e` as the only
   accent (seal, current nav item, active status). The theme control offers
   自动 / 浅色 / 深色; 自动 follows the system, and the choice is remembered.
-- **Writing** — `getWriting()` fetches `hmilyld.com/rss.xml` at build time and falls
-  back to `writing-fallback.json` when the blog is unreachable, so a build never fails.
-  Run `pnpm writing:refresh` to update the snapshot.
+- **Writing** — `getWriting()` fetches the blog feed at build time and falls back to
+  `writing-fallback.json` when the blog is unreachable, so a build never fails. The list
+  is then refreshed from the same feed in the browser on every visit, so new posts appear
+  without a rebuild. Run `pnpm writing:refresh` to update the snapshot. The feed is read
+  from `www.hmilyld.com` because the bare domain 307-redirects without CORS headers.
 - **Type** — self-hosted Overpass Variable (Latin) and Noto Sans SC Variable (CJK);
   columns align with `tabular-nums`, not a monospace face.
 - **SEO** — per-page title/description/keywords plus `Person` JSON-LD.

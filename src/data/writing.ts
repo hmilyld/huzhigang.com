@@ -9,8 +9,11 @@ export interface Post {
   category: string;
 }
 
-const FEED = 'https://hmilyld.com/rss.xml';
-const LIMIT = 5;
+// www.hmilyld.com serves the feed directly; the bare domain 307-redirects to it,
+// and that redirect carries no CORS header — which browsers reject on a
+// cross-origin fetch. So the client (and the build) read the www host.
+export const FEED = 'https://www.hmilyld.com/rss.xml';
+export const LIMIT = 5;
 const TIMEOUT_MS = 8000;
 
 export interface Writing {
