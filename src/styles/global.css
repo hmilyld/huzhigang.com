@@ -16,8 +16,8 @@
     system-ui, sans-serif;
 
   --rail-w: 320px;
-  /* 与 hmilyld.com 同一套：320(栏) + 56 + 672(正文) + 56 = 1104 */
-  --shell-max: 69rem;
+  /* 与 hmilyld.com 同一套：320(栏) + 56 + 768(正文) + 56 = 1200 */
+  --shell-max: 75rem;
   --gutter: 3.5rem;
 
   /* 几何与动效刻度，两边逐字一致 */
@@ -351,8 +351,8 @@
   }
 
   .pane-inner {
-    /* 42rem = 672px = 42 个汉字/行，同时也是整个内容区的宽度 */
-    max-width: 42rem;
+    /* 48rem = 768px = 48 个汉字/行，同时也是整个内容区的宽度 */
+    max-width: 48rem;
   }
 
   .sect {
@@ -669,7 +669,7 @@
   .pane-inner {
     /* width:100% 不能省：只写 margin-inline:auto 会让 flex 子项收缩包裹 */
     width: 100%;
-    max-width: 42rem;
+    max-width: 48rem;
     margin-inline: auto;
   }
 }
