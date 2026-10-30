@@ -23,7 +23,7 @@ const themes = [
       <span class="lat-sub">HU ZHIGANG</span>
     </div>
   </div>
-  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-rail">目录</button>
+  <button class="menu-toggle btn" type="button" aria-expanded="false" aria-controls="site-rail">目录</button>
 </header>
 
 <div class="backdrop" data-backdrop></div>
@@ -47,7 +47,7 @@ const themes = [
 
   <nav class="rail-nav" aria-label="页面导航">
     {nav.map((item) => (
-      <a href={item.href}>
+      <a href={item.href} data-nav={item.href.slice(1)}>
         {item.zh}<span class="en">{item.en}</span>
       </a>
     ))}
@@ -76,8 +76,24 @@ const themes = [
       menu.setAttribute('aria-expanded', String(open));
       menu.textContent = open ? '关闭' : '目录';
       document.body.classList.toggle('has-drawer', open);
+
+      // 抽屉是模态的（遮罩 + body 锁滚动），背后的内容就不该再被 Tab 到
+      const pane = document.querySelector<HTMLElement>('#main');
+      if (pane) pane.inert = open;
+
       if (open) {
-        rail.querySelector<HTMLAnchorElement>('.rail-nav a')?.focus();
+        // 同一 tick 里 .rail 还计算成 visibility: hidden，focus() 会静默失败，
+        // 必须等一帧、再强制一次样式计算
+        requestAnimationFrame(() => {
+          const first = rail.querySelector<HTMLAnchorElement>('.rail-nav a');
+          if (!first) return;
+          void rail.offsetWidth;
+          first.focus();
+          if (!rail.contains(document.activeElement)) {
+            rail.addEventListener('transitionend', () => first.focus(), { once: true });
+            window.setTimeout(() => first.focus(), 260);
+          }
+        });
       } else if (window.getComputedStyle(menu).display !== 'none') {
         menu.focus();
       }
@@ -101,7 +117,12 @@ const themes = [
 
   if (targets.length > 0) {
     const setActive = (id: string) => {
-      links.forEach((link) => link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`));
+      links.forEach((link) => {
+        const active = link.getAttribute('href') === `#${id}`;
+        link.classList.toggle('is-active', active);
+        if (active) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      });
     };
 
     let clickLocked = false;

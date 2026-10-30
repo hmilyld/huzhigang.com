@@ -3,7 +3,6 @@
 :root {
   /* 钢板 · 铁黑 · 朱红 */
   --color-ground: #eeede9;
-  --color-surface: #f7f6f3;
   --color-ink: #26282b;
   --color-soft: #55595d; /* 6.0:1 on ground */
   --color-faint: #676b6f; /* 4.6:1 on ground */
@@ -17,13 +16,26 @@
     system-ui, sans-serif;
 
   --rail-w: 320px;
-  --shell-max: 1320px;
+  /* 与 hmilyld.com 同一套：320(栏) + 56 + 672(正文) + 56 = 1104 */
+  --shell-max: 69rem;
   --gutter: 3.5rem;
+
+  /* 几何与动效刻度，两边逐字一致 */
+  --radius: 3px;
+  --dur: 150ms;
+  --dur-slow: 200ms;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
 }
 
 .dark {
   --color-ground: #1a1c1e;
-  --color-surface: #202225;
   --color-ink: #e7e8e5;
   --color-soft: #9aa0a4; /* 6.5:1 */
   --color-faint: #8a9095; /* 5.3:1 */
@@ -49,12 +61,12 @@
     background-color: var(--color-ground);
     color: var(--color-ink);
     font-family: var(--font-han);
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.75;
     font-variant-numeric: tabular-nums;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 200ms ease, color 200ms ease;
+    transition: background-color var(--dur-slow) ease, color var(--dur-slow) ease;
   }
 
   ::selection {
@@ -62,15 +74,16 @@
     color: var(--color-ground);
   }
 
+  /* 焦点环不改元素自身的圆角 */
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
-    border-radius: 2px;
   }
 
   h1,
   h2,
-  h3 {
+  h3,
+  h4 {
     font-weight: 600;
     line-height: 1.4;
   }
@@ -79,6 +92,54 @@
 @layer components {
   .lat {
     font-family: var(--font-lat);
+  }
+
+  /* ── 按钮 ────────────────────────────────────────── */
+  .btn {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 32px;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--color-rule-strong);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--color-soft);
+    font-family: var(--font-han);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      color var(--dur) ease,
+      border-color var(--dur) ease,
+      background-color var(--dur) ease;
+  }
+
+  .btn:hover {
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  .btn:active {
+    background-color: color-mix(in srgb, var(--color-ink) 7%, transparent);
+  }
+
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn:disabled:hover {
+    color: var(--color-soft);
+    border-color: var(--color-rule-strong);
+  }
+
+  .btn--icon {
+    width: 32px;
+    padding: 0;
   }
 
   /* ── shell: rail + content, capped and centred ───── */
@@ -97,14 +158,14 @@
     height: 100dvh;
     display: flex;
     flex-direction: column;
-    padding: 2.25rem 1.9rem 1.75rem;
+    padding: 2.5rem 2rem 1.75rem;
     border-right: 1px solid var(--color-rule);
   }
 
   .rail-mark {
     display: flex;
     align-items: center;
-    gap: 0.7rem;
+    gap: 0.75rem;
   }
 
   .seal {
@@ -133,7 +194,7 @@
     margin: 0;
     font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     line-height: 1.15;
   }
 
@@ -141,7 +202,7 @@
     display: block;
     font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     line-height: 1.15;
   }
 
@@ -149,47 +210,38 @@
     display: block;
     font-family: var(--font-lat);
     font-weight: 600;
-    font-size: 0.72rem;
+    font-size: 0.76rem;
     letter-spacing: 0.26em;
     color: var(--color-faint);
-    margin-top: 0.2rem;
+    margin-top: 0.25rem;
   }
 
   .rail-pos {
-    margin: 1.4rem 0 0;
+    margin: 1.5rem 0 0;
     color: var(--color-soft);
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     max-width: 18em;
   }
 
   .rail-now {
     margin-top: 1.5rem;
-    padding-top: 1.1rem;
+    padding-top: 1rem;
     border-top: 1px solid var(--color-rule);
   }
 
   .rail-now .k {
     display: block;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
     color: var(--color-accent);
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
   }
 
   .rail-now p {
     margin: 0;
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     color: var(--color-ink);
     max-width: 20em;
-  }
-
-  .rail-now .d {
-    display: block;
-    margin-top: 0.4rem;
-    font-family: var(--font-lat);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    color: var(--color-faint);
   }
 
   .rail-nav {
@@ -204,20 +256,20 @@
   .rail-nav a {
     display: flex;
     align-items: baseline;
-    gap: 0.6rem;
-    padding: 0.3rem 0;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
     color: var(--color-soft);
     text-decoration: none;
-    transition: color 140ms ease;
+    transition: color var(--dur) ease;
   }
 
   .rail-nav a .en {
     font-family: var(--font-lat);
-    font-size: 0.66rem;
+    font-size: 0.75rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-faint);
-    transition: color 140ms ease;
+    transition: color var(--dur) ease;
   }
 
   .rail-nav a:hover {
@@ -243,7 +295,7 @@
   }
 
   .rail-foot .where {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     letter-spacing: 0.08em;
     color: var(--color-faint);
   }
@@ -252,7 +304,7 @@
   .theme {
     display: inline-flex;
     border: 1px solid var(--color-rule-strong);
-    border-radius: 3px;
+    border-radius: var(--radius);
     overflow: hidden;
   }
 
@@ -263,12 +315,16 @@
     background: transparent;
     color: var(--color-soft);
     font-family: var(--font-han);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     line-height: 1;
     letter-spacing: 0.08em;
-    padding: 0.32rem 0.55rem;
+    /* WCAG 2.5.8：并排的独立目标，间距豁免不成立 */
+    min-height: 24px;
+    padding: 0.38rem 0.5rem;
     cursor: pointer;
-    transition: color 150ms ease, background-color 150ms ease;
+    transition:
+      color var(--dur) ease,
+      background-color var(--dur) ease;
   }
 
   .theme button:first-child {
@@ -295,33 +351,36 @@
   }
 
   .pane-inner {
-    max-width: 56rem;
+    /* 42rem = 672px = 42 个汉字/行，同时也是整个内容区的宽度 */
+    max-width: 42rem;
   }
 
   .sect {
-    padding: 0 0 2.75rem;
+    padding: 0 0 3rem;
     scroll-margin-top: 1.5rem;
   }
 
   .sect-head {
     display: flex;
     align-items: baseline;
-    gap: 0.8rem;
-    margin-bottom: 0.4rem;
-    padding-bottom: 0.7rem;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.75rem;
     border-bottom: 2px solid var(--color-ink);
   }
 
   .sect-head h2 {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    text-wrap: balance;
   }
 
   .sect-head .en {
     font-family: var(--font-lat);
-    font-size: 0.66rem;
+    font-size: 0.75rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-faint);
@@ -330,13 +389,13 @@
   .sect-head .more {
     margin-left: auto;
     font-family: var(--font-lat);
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     letter-spacing: 0.04em;
     color: var(--color-soft);
     text-decoration: none;
     border-bottom: 1px solid var(--color-rule);
     padding-bottom: 2px;
-    transition: color 150ms ease, border-color 150ms ease;
+    transition: color var(--dur) ease, border-color var(--dur) ease;
   }
 
   .sect-head .more:hover {
@@ -353,29 +412,30 @@
 
   .row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 12rem;
-    gap: 0.25rem 3rem;
+    grid-template-columns: minmax(0, 1fr) 10rem;
+    gap: 0.25rem 2.5rem;
     padding: 1rem 0;
     border-top: 1px solid var(--color-rule);
   }
 
   .row:first-of-type {
     border-top: 0;
-    padding-top: 0.9rem;
+    padding-top: 1rem;
   }
 
   .row-main h3 {
     margin: 0;
-    font-size: 1.02rem;
+    font-size: 1.05rem;
     font-weight: 600;
     letter-spacing: 0.01em;
+    text-wrap: balance;
   }
 
   .row-main h3 a {
     color: inherit;
     text-decoration: none;
     border-bottom: 1px solid transparent;
-    transition: border-color 150ms ease;
+    transition: border-color var(--dur) ease;
   }
 
   .row-main h3 a:hover {
@@ -383,10 +443,9 @@
   }
 
   .row-main p {
-    margin: 0.3rem 0 0;
+    margin: 0.25rem 0 0;
     color: var(--color-soft);
-    font-size: 0.91rem;
-    max-width: 38em;
+    font-size: 0.9rem;
   }
 
   .row-meta {
@@ -396,7 +455,7 @@
     gap: 0.1rem;
     text-align: right;
     font-family: var(--font-lat);
-    font-size: 0.76rem;
+    font-size: 0.8rem;
     letter-spacing: 0.04em;
     color: var(--color-faint);
   }
@@ -411,32 +470,22 @@
   }
 
   .lead {
-    margin: 0.7rem 0 0;
-    max-width: 36em;
-  }
-
-  .lead .d {
-    display: block;
-    margin-top: 0.35rem;
-    font-family: var(--font-lat);
-    font-size: 0.76rem;
-    letter-spacing: 0.08em;
-    color: var(--color-faint);
+    margin: 0.75rem 0 0;
   }
 
   .stack {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 1.1rem;
+    gap: 0.5rem;
+    margin-top: 1rem;
     font-family: var(--font-lat);
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: var(--color-soft);
   }
 
   .stack span {
     border: 1px solid var(--color-rule);
-    border-radius: 3px;
+    border-radius: var(--radius);
     padding: 0.08rem 0.5rem;
   }
 
@@ -444,7 +493,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 1.75rem;
-    margin-top: 0.9rem;
+    margin-top: 1rem;
     font-family: var(--font-lat);
     font-size: 0.85rem;
   }
@@ -454,7 +503,7 @@
     text-decoration: none;
     border-bottom: 1px solid var(--color-rule);
     padding-bottom: 2px;
-    transition: color 150ms ease, border-color 150ms ease;
+    transition: color var(--dur) ease, border-color var(--dur) ease;
   }
 
   .contact-links a:hover {
@@ -468,9 +517,9 @@
     border-top: 1px solid var(--color-rule);
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem 1.25rem;
+    gap: 0.5rem 1.25rem;
     color: var(--color-soft);
-    font-size: 0.82rem;
+    font-size: 0.85rem;
   }
 
   .colophon .d {
@@ -486,8 +535,8 @@
     z-index: 50;
     background: var(--color-ink);
     color: var(--color-ground);
-    padding: 0.5rem 0.9rem;
-    border-radius: 0 0 4px 0;
+    padding: 0.5rem 1rem;
+    border-radius: 0 0 var(--radius) 0;
     font-size: 0.85rem;
     text-decoration: none;
   }
@@ -500,24 +549,20 @@
 /* ── responsive ──────────────────────────────────── */
 @media (max-width: 1199px) {
   :root {
-    --gutter: 2.75rem;
+    --gutter: 2.5rem;
   }
 
   .row {
     grid-template-columns: minmax(0, 1fr);
-    gap: 0.35rem;
+    gap: 0.25rem;
   }
 
   .row-meta {
     flex-direction: row;
     align-items: baseline;
     flex-wrap: wrap;
-    gap: 0.4rem 1.1rem;
+    gap: 0.5rem 1rem;
     text-align: left;
-  }
-
-  .pane-inner {
-    max-width: 46rem;
   }
 }
 
@@ -536,19 +581,20 @@
   .mobilebar {
     position: sticky;
     top: 0;
-    z-index: 30;
+    /* 必须压在遮罩之上，否则抽屉打开时「关闭」按钮点不到 */
+    z-index: 36;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 0.7rem 1.25rem;
+    padding: 0.75rem 1.25rem;
     background: color-mix(in srgb, var(--color-ground) 92%, transparent);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--color-rule);
   }
 
   .mobilebar .rail-mark {
-    gap: 0.6rem;
+    gap: 0.5rem;
   }
 
   .mobilebar .seal {
@@ -560,26 +606,8 @@
   }
 
   .mobilebar .rail-who .lat-sub {
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-  }
-
-  .menu-toggle {
-    font-family: var(--font-han);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    color: var(--color-soft);
-    background: transparent;
-    border: 1px solid var(--color-rule-strong);
-    border-radius: 3px;
-    padding: 0.3rem 0.7rem;
-    cursor: pointer;
-    transition: color 150ms ease, border-color 150ms ease;
-  }
-
-  .menu-toggle:hover {
-    color: var(--color-ink);
-    border-color: var(--color-ink);
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
   }
 
   .backdrop {
@@ -590,7 +618,7 @@
     background: color-mix(in srgb, #1a1c1e 45%, transparent);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 200ms ease;
+    transition: opacity var(--dur-slow) ease;
   }
 
   .backdrop.is-open {
@@ -611,13 +639,18 @@
     background: var(--color-ground);
     border-right: 1px solid var(--color-rule);
     border-bottom: 0;
-    padding: 1.5rem 1.35rem 1.75rem;
+    padding: 1.5rem 1.25rem 1.75rem;
     transform: translateX(-100%);
-    transition: transform 220ms ease;
+    /* 收起来后彻底不可见，否则里面的链接还能被 Tab 到 */
+    visibility: hidden;
+    transition:
+      transform var(--dur-slow) ease,
+      visibility var(--dur-slow);
   }
 
   .rail.is-open {
     transform: none;
+    visibility: visible;
   }
 
   .rail-pos,
@@ -634,7 +667,10 @@
   }
 
   .pane-inner {
-    max-width: none;
+    /* width:100% 不能省：只写 margin-inline:auto 会让 flex 子项收缩包裹 */
+    width: 100%;
+    max-width: 42rem;
+    margin-inline: auto;
   }
 }
 
