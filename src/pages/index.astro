@@ -15,20 +15,20 @@ const writing = await getWriting();
       <div class="pane-inner">
         <section class="sect" id="projects">
           <div class="sect-head">
-            <h2>项目</h2><span class="en">Projects</span>
+            <h2>项目</h2><span class="en" lang="en">Projects</span>
             <a class="more lat" href="https://github.com/hmilyld">全部仓库</a>
           </div>
 
-          <ul class="rows">
+          <ul class="rows" role="list">
             {projects.map((project) => (
               <li class="row">
                 <div class="row-main">
-                  <h3 class="lat"><a href={project.url}>{project.name}</a></h3>
+                  <h3 class="lat" lang="en"><a href={project.url}>{project.name}</a></h3>
                   <p>{project.description}</p>
                 </div>
                 <div class="row-meta">
                   <span class="zh is-active">{project.status}</span>
-                  <span>{project.tech}</span>
+                  <span lang="en">{project.tech}</span>
                 </div>
               </li>
             ))}
@@ -37,11 +37,11 @@ const writing = await getWriting();
 
         <section class="sect" id="writing">
           <div class="sect-head">
-            <h2>写作</h2><span class="en">Writing</span>
-            <a class="more lat" href="https://hmilyld.com">hmilyld.com</a>
+            <h2>写作</h2><span class="en" lang="en">Writing</span>
+            <a class="more lat" href="https://hmilyld.com" lang="en">hmilyld.com</a>
           </div>
 
-          <ul class="rows" id="writing-list" data-feed={FEED} data-limit={LIMIT}>
+          <ul class="rows" id="writing-list" role="list" data-feed={FEED} data-limit={LIMIT}>
             {writing.posts.map((post) => (
               <li class="row">
                 <div class="row-main">
@@ -58,11 +58,11 @@ const writing = await getWriting();
 
         <section class="sect" id="about">
           <div class="sect-head">
-            <h2>关于</h2><span class="en">Profile</span>
+            <h2>关于</h2><span class="en" lang="en">Profile</span>
             <a class="more lat" href="https://hmilyld.com/about">博客里的我</a>
           </div>
 
-          <ul class="rows">
+          <ul class="rows" role="list">
             {roles.map((role) => (
               <li class="row">
                 <div class="row-main">
@@ -75,7 +75,7 @@ const writing = await getWriting();
             ))}
           </ul>
 
-          <div class="stack">
+          <div class="stack" lang="en">
             {stack.map((item) => (
               <span>{item}</span>
             ))}
@@ -91,7 +91,7 @@ const writing = await getWriting();
             这个域名是身份层，写东西在 hmilyld.com。合作或闲聊都可以写信。
           </p>
 
-          <div class="contact-links">
+          <div class="contact-links" lang="en">
             <a href="mailto:Hmilyld@gmail.com">Hmilyld@gmail.com</a>
             <a href="https://github.com/hmilyld" rel="me">github.com/hmilyld</a>
             <a href="https://hmilyld.com" rel="me">hmilyld.com</a>
@@ -130,7 +130,12 @@ const writing = await getWriting();
       const timer = setTimeout(() => controller.abort(), 8000);
 
       try {
-        const response = await fetch(feed, { signal: controller.signal, redirect: 'follow' });
+        const response = await fetch(feed, {
+          signal: controller.signal,
+          redirect: 'follow',
+          // 后台刷新不该和首屏资源抢带宽
+          priority: 'low',
+        });
 
         if (response.ok) {
           const posts = parseRssItems(await response.text(), limit) as Post[];
@@ -141,8 +146,10 @@ const writing = await getWriting();
             list.replaceChildren(...posts.map(renderRow));
           }
         }
-      } catch {
-        // Keep what was rendered at build time.
+      } catch (error) {
+        // Keep what was rendered at build time; the build-time snapshot is
+        // still correct, this refresh is only an enhancement.
+        console.debug('writing feed refresh skipped:', error);
       } finally {
         clearTimeout(timer);
       }

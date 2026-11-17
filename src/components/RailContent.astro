@@ -1,0 +1,69 @@
+---
+import Seal from './Seal.astro';
+
+/**
+ * The rail's contents, shared by the desktop sidebar and the mobile drawer so
+ * the two never drift apart.
+ */
+interface Props {
+  /** Drawer copy gets a close button and drops the sticky-only sizing. */
+  variant?: 'sidebar' | 'drawer';
+  /** Drawer is a separate dialog, so its name is not the page's h1. */
+  heading?: 'h1' | 'p';
+}
+
+const { variant = 'sidebar', heading = 'h1' } = Astro.props;
+const isDrawer = variant === 'drawer';
+
+const nav = [
+  { href: '#projects', zh: '项目', en: 'Projects' },
+  { href: '#writing', zh: '写作', en: 'Writing' },
+  { href: '#about', zh: '关于', en: 'Profile' },
+  { href: '#contact', zh: '联系', en: 'Contact' },
+];
+
+const themes = [
+  { value: 'system', label: '自动' },
+  { value: 'light', label: '浅色' },
+  { value: 'dark', label: '深色' },
+];
+---
+
+{isDrawer && (
+  <button class="btn rail-close" type="button" data-drawer-close>
+    关闭
+  </button>
+)}
+
+<div class="rail-mark">
+  <Seal />
+  <div class="rail-who">
+    {heading === 'h1' ? <h1>胡志刚</h1> : <p class="bar-name">胡志刚</p>}
+    <span class="lat-sub" lang="en">HU ZHIGANG</span>
+  </div>
+</div>
+
+<p class="rail-pos">写代码，做工具，偶尔写点东西。</p>
+
+<div class="rail-now">
+  <span class="k">现在</span>
+  <p>正在构建 ArkDesk 与 PocketArk，把零散的工具整理成一套个人工具链。</p>
+  <span class="d">更新于 2026-09</span>
+</div>
+
+<nav class="rail-nav" aria-label={isDrawer ? '页面导航（抽屉）' : '页面导航'}>
+  {nav.map((item) => (
+    <a href={item.href}>
+      {item.zh}<span class="en" lang="en">{item.en}</span>
+    </a>
+  ))}
+</nav>
+
+<div class="rail-foot">
+  <span class="where">河南 · 周口 · 沈丘</span>
+  <div class="theme" role="group" aria-label="主题">
+    {themes.map((t) => (
+      <button type="button" data-theme-value={t.value} aria-pressed="false">{t.label}</button>
+    ))}
+  </div>
+</div>

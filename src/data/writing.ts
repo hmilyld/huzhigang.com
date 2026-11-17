@@ -38,7 +38,10 @@ export async function getWriting(): Promise<Writing> {
     if (posts.length === 0) throw new Error('feed had no items');
 
     return { posts, source: 'rss' };
-  } catch {
+  } catch (error) {
+    // A build must never fail because the blog is unreachable; the committed
+    // snapshot is the fallback, and the reason is worth logging.
+    console.warn('writing feed unavailable, using snapshot:', error);
     return { posts: (snapshot as Post[]).slice(0, LIMIT), source: 'snapshot' };
   }
 }

@@ -1,6 +1,6 @@
 ---
 import '@fontsource-variable/overpass/wght.css';
-import '@fontsource-variable/noto-sans-sc/wght.css';
+import '../styles/fonts.css';
 import '../styles/global.css';
 
 interface Props {
@@ -58,6 +58,10 @@ const graph = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* 浏览器在渲染前就知道两套配色都支持，避免白闪；无 JS 时保持 light dark */}
+    <meta name="color-scheme" content="light dark" />
+    {/* 允许浏览器按系统字号缩放整个页面（Chrome 146+） */}
+    <meta name="text-scale" content="scale" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
@@ -65,7 +69,8 @@ const graph = {
     <meta name="keywords" content={keywords} />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#eeede9" />
+    <meta name="theme-color" content="#eeede9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1c1e" media="(prefers-color-scheme: dark)" />
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -93,16 +98,23 @@ const graph = {
 
     <script type="application/ld+json" is:inline set:html={JSON.stringify(graph)} />
 
-    {/* 绘制前定好明暗：有记录用记录，没有就跟随系统。 */}
+    {/* 绘制前定好明暗：meta 是唯一真相，CSS 用 :has() 跟随它。 */}
     <script is:inline>
       (() => {
         try {
           const stored = localStorage.getItem('theme');
-          const dark =
-            stored === 'dark' ||
-            (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-          document.documentElement.classList.toggle('dark', dark);
-        } catch {}
+          const value = stored === 'light' || stored === 'dark' ? stored : 'light dark';
+          document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', value);
+          if (value !== 'light dark') {
+            const color = value === 'dark' ? '#1a1c1e' : '#eeede9';
+            document
+              .querySelectorAll('meta[name="theme-color"]')
+              .forEach((meta) => meta.setAttribute('content', color));
+          }
+        } catch (error) {
+          // 存储被禁用时保持 light dark，跟随系统即可，不影响渲染。
+          console.debug('theme preference unavailable:', error);
+        }
       })();
     </script>
   </head>
@@ -111,36 +123,54 @@ const graph = {
     <slot />
 
     <script>
-      const root = document.documentElement;
-      const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-      const choices = document.querySelectorAll<HTMLButtonElement>('.theme [data-theme-value]');
+      const scheme = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]');
+      const themeColors = [...document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')];
+      const choices = [...document.querySelectorAll<HTMLButtonElement>('.theme [data-theme-value]')];
       const system = window.matchMedia('(prefers-color-scheme: dark)');
+      const THEME_COLORS = { light: '#eeede9', dark: '#1a1c1e' };
 
       function storedMode(): 'system' | 'light' | 'dark' {
         try {
           const value = localStorage.getItem('theme');
           return value === 'light' || value === 'dark' ? value : 'system';
-        } catch {
+        } catch (error) {
+          console.debug('theme preference unavailable:', error);
           return 'system';
         }
+      }
+
+      function syncThemeColor(mode: 'system' | 'light' | 'dark', dark: boolean) {
+        // 两条 meta 各自带 media，让浏览器在无 JS 时也能选对颜色。
+        // 手动锁定时把两条都改成同一个色，谁匹配都得到锁定色。
+        const pinned = mode === 'system' ? null : dark ? THEME_COLORS.dark : THEME_COLORS.light;
+        themeColors.forEach((meta, index) => {
+          const fallback = index === 0 ? THEME_COLORS.light : THEME_COLORS.dark;
+          meta.setAttribute('content', pinned ?? fallback);
+        });
       }
 
       function applyTheme() {
         const mode = storedMode();
         const dark = mode === 'dark' || (mode === 'system' && system.matches);
 
-        root.classList.toggle('dark', dark);
+        // 「自动」交还给浏览器：light dark 让系统自己决定。
+        scheme?.setAttribute('content', mode === 'system' ? 'light dark' : mode);
         choices.forEach((choice) => {
           choice.setAttribute('aria-pressed', String(choice.dataset.themeValue === mode));
         });
-        themeColor?.setAttribute('content', dark ? '#1a1c1e' : '#eeede9');
+        syncThemeColor(mode, dark);
       }
 
       choices.forEach((choice) => {
         choice.addEventListener('click', () => {
+          const mode = choice.dataset.themeValue ?? 'system';
           try {
-            localStorage.setItem('theme', choice.dataset.themeValue ?? 'system');
-          } catch {}
+            // 回到自动时删掉记录，否则会把系统偏好永久钉死。
+            if (mode === 'system') localStorage.removeItem('theme');
+            else localStorage.setItem('theme', mode);
+          } catch (error) {
+            console.debug('theme preference not saved:', error);
+          }
           applyTheme();
         });
       });
@@ -148,6 +178,11 @@ const graph = {
       // While on 自动, follow the system as it changes during the visit.
       system.addEventListener('change', () => {
         if (storedMode() === 'system') applyTheme();
+      });
+
+      // Another tab changed the preference.
+      window.addEventListener('storage', (event) => {
+        if (event.key === 'theme') applyTheme();
       });
 
       applyTheme();

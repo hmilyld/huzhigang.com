@@ -1,118 +1,97 @@
 ---
 import Seal from './Seal.astro';
-
-const nav = [
-  { href: '#projects', zh: '项目', en: 'Projects' },
-  { href: '#writing', zh: '写作', en: 'Writing' },
-  { href: '#about', zh: '关于', en: 'Profile' },
-  { href: '#contact', zh: '联系', en: 'Contact' },
-];
-
-const themes = [
-  { value: 'system', label: '自动' },
-  { value: 'light', label: '浅色' },
-  { value: 'dark', label: '深色' },
-];
+import RailContent from './RailContent.astro';
 ---
 
 <header class="mobilebar">
   <div class="rail-mark">
     <Seal />
     <div class="rail-who">
-      <span class="bar-name">胡志刚</span>
-      <span class="lat-sub">HU ZHIGANG</span>
+      {/* 窄屏下侧栏是 display:none，页面标题由顶栏承担 */}
+      <h1 class="bar-name">胡志刚</h1>
+      <span class="lat-sub" lang="en">HU ZHIGANG</span>
     </div>
   </div>
-  <button class="menu-toggle btn" type="button" aria-expanded="false" aria-controls="site-rail">目录</button>
+  <button
+    class="menu-toggle btn"
+    type="button"
+    aria-expanded="false"
+    aria-controls="site-drawer"
+    data-drawer-open
+  >
+    目录
+  </button>
 </header>
 
-<div class="backdrop" data-backdrop></div>
-
 <aside class="rail" id="site-rail">
-  <div class="rail-mark">
-    <Seal />
-    <div class="rail-who">
-      <h1>胡志刚</h1>
-      <span class="lat-sub">HU ZHIGANG</span>
-    </div>
-  </div>
-
-  <p class="rail-pos">写代码，做工具，偶尔写点东西。</p>
-
-  <div class="rail-now">
-    <span class="k">现在</span>
-    <p>正在构建 ArkDesk 与 PocketArk，把零散的工具整理成一套个人工具链。</p>
-    <span class="d">更新于 2026-09</span>
-  </div>
-
-  <nav class="rail-nav" aria-label="页面导航">
-    {nav.map((item) => (
-      <a href={item.href} data-nav={item.href.slice(1)}>
-        {item.zh}<span class="en">{item.en}</span>
-      </a>
-    ))}
-  </nav>
-
-  <div class="rail-foot">
-    <span class="where">河南 · 周口 · 沈丘</span>
-    <div class="theme" role="group" aria-label="主题">
-      {themes.map((t) => (
-        <button type="button" data-theme-value={t.value} aria-pressed="false">{t.label}</button>
-      ))}
-    </div>
-  </div>
+  <RailContent />
 </aside>
 
+{/* 移动端：原生 dialog 自带焦点陷阱、Esc、焦点归还与 ::backdrop */}
+<dialog class="drawer" id="site-drawer" aria-label="目录">
+  <RailContent variant="drawer" heading="p" />
+</dialog>
+
 <script>
-  // ── off-canvas drawer (mobile only) ──────────────────
-  const rail = document.getElementById('site-rail');
-  const menu = document.querySelector<HTMLButtonElement>('.menu-toggle');
-  const backdrop = document.querySelector<HTMLElement>('[data-backdrop]');
+  // ── drawer: native <dialog>, so modality is the browser's job ──
+  const drawer = document.querySelector<HTMLDialogElement>('#site-drawer');
+  const menu = document.querySelector<HTMLButtonElement>('[data-drawer-open]');
+  const wide = window.matchMedia('(min-width: 861px)');
 
-  if (rail && menu && backdrop) {
-    const setOpen = (open: boolean) => {
-      rail.classList.toggle('is-open', open);
-      backdrop.classList.toggle('is-open', open);
-      menu.setAttribute('aria-expanded', String(open));
-      menu.textContent = open ? '关闭' : '目录';
-      document.body.classList.toggle('has-drawer', open);
-
-      // 抽屉是模态的（遮罩 + body 锁滚动），背后的内容就不该再被 Tab 到
-      const pane = document.querySelector<HTMLElement>('#main');
-      if (pane) pane.inert = open;
-
-      if (open) {
-        // 同一 tick 里 .rail 还计算成 visibility: hidden，focus() 会静默失败，
-        // 必须等一帧、再强制一次样式计算
-        requestAnimationFrame(() => {
-          const first = rail.querySelector<HTMLAnchorElement>('.rail-nav a');
-          if (!first) return;
-          void rail.offsetWidth;
-          first.focus();
-          if (!rail.contains(document.activeElement)) {
-            rail.addEventListener('transitionend', () => first.focus(), { once: true });
-            window.setTimeout(() => first.focus(), 260);
-          }
-        });
-      } else if (window.getComputedStyle(menu).display !== 'none') {
-        menu.focus();
-      }
+  if (drawer && menu) {
+    const openDrawer = () => {
+      drawer.showModal();
+      menu.setAttribute('aria-expanded', 'true');
     };
 
-    menu.addEventListener('click', () => setOpen(!rail.classList.contains('is-open')));
-    backdrop.addEventListener('click', () => setOpen(false));
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && rail.classList.contains('is-open')) setOpen(false);
+    const closeDrawer = () => {
+      if (drawer.open) drawer.close();
+    };
+
+    menu.addEventListener('click', () => {
+      if (drawer.open) closeDrawer();
+      else openDrawer();
     });
-    rail.querySelectorAll('.rail-nav a').forEach((link) => {
-      link.addEventListener('click', () => setOpen(false));
+
+    // showModal() 已经把焦点移进 dialog，关闭时浏览器会还给触发者；
+    // 只在按钮可见（窄屏）时才额外补一次，避免宽屏抢焦点。
+    drawer.addEventListener('close', () => {
+      menu.setAttribute('aria-expanded', 'false');
+      if (!wide.matches) menu.focus();
+    });
+
+    // 抽屉内的关闭按钮和导航链接都要能收起来。
+    drawer.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+      if (target.closest('[data-drawer-close]') || target.closest('.rail-nav a')) {
+        closeDrawer();
+        return;
+      }
+      // 点 ::backdrop 时事件目标就是 dialog 本身，但点 dialog 的内边距也一样；
+      // 用坐标判断是否落在抽屉框外，只有真正点遮罩才关。
+      if (target === drawer) {
+        const rect = drawer.getBoundingClientRect();
+        const outside =
+          event.clientX < rect.left ||
+          event.clientX > rect.right ||
+          event.clientY < rect.top ||
+          event.clientY > rect.bottom;
+        if (outside) closeDrawer();
+      }
+    });
+
+    // 视口变宽时抽屉已无意义，顺手关掉。
+    wide.addEventListener('change', (event) => {
+      if (event.matches) closeDrawer();
     });
   }
 
   // ── scroll-spy: highlight the section being read ─────
+  // 侧栏与抽屉各有一份导航，两份都要同步高亮。
   const links = [...document.querySelectorAll<HTMLAnchorElement>('.rail-nav a')];
-  const targets = links
-    .map((link) => document.querySelector<HTMLElement>(link.getAttribute('href') ?? ''))
+  const targets = [...new Set(links.map((link) => link.getAttribute('href') ?? ''))]
+    .map((href) => document.querySelector<HTMLElement>(href))
     .filter((el): el is HTMLElement => Boolean(el));
 
   if (targets.length > 0) {
@@ -120,7 +99,7 @@ const themes = [
       links.forEach((link) => {
         const active = link.getAttribute('href') === `#${id}`;
         link.classList.toggle('is-active', active);
-        if (active) link.setAttribute('aria-current', 'true');
+        if (active) link.setAttribute('aria-current', 'location');
         else link.removeAttribute('aria-current');
       });
     };
